@@ -1,0 +1,11 @@
+FROM clojure:alpine
+
+ENV APP_HOME /app/jobs
+WORKDIR $APP_HOME
+
+COPY ./jobs/project.clj .
+RUN lein deps
+
+COPY . .
+
+CMD ["lein", "run"]

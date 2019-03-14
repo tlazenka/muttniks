@@ -1,0 +1,47 @@
+@import com.muttniks.pet.{Page, Pet}
+@import play.api.libs.json.JsValue
+
+@import play.api.libs.json.JsArray
+
+@(petsJson: JsArray, adoptionContractJson: JsValue, web3HttpServiceUrl: String, currentPage: Page[Pet])(implicit request: play.api.mvc.RequestHeader, messages: Messages)
+
+@link(newPage: Int) = @{
+    routes.FrontEndController.all(page = newPage)
+}
+
+@main {
+
+    <div class="container" id="main">
+
+        <h2 class="text-uppercase">@Messages("pets.list.title", currentPage.total)</h2>
+
+        @pets(petsJson = petsJson, adoptionContractJson = adoptionContractJson, web3HttpServiceUrl = web3HttpServiceUrl)
+
+        <nav>
+            <ul id="pagination" class="pagination">
+                @currentPage.previous.map { page =>
+                    <li class="page-item">
+                        <a class="page-link" href="@link(page)">&larr; Previous</a>
+                    </li>
+                }.getOrElse {
+                    <li class="page-item disabled">
+                        <a class="page-link">&larr; Previous</a>
+                    </li>
+                }
+                <li class="page-item disabled">
+                    <a class="page-link">Displaying @(currentPage.offset + 1) to @(currentPage.offset + currentPage.items.size) of @currentPage.total</a>
+                </li>
+                @currentPage.next.map { page =>
+                    <li class="page-item">
+                        <a class="page-link" href="@link(page)">Next &rarr;</a>
+                    </li>
+                }.getOrElse {
+                    <li class="page-item disabled">
+                        <a class="page-link">Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+}

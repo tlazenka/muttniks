@@ -1,0 +1,4 @@
+FROM openjdk:8u181-jre-alpine3.8
+
+RUN wget https://github.com/web3j/web3j/releases/download/v3.3.1/web3j-3.3.1.tar
+RUN tar xvf web3j-3.3.1.tar

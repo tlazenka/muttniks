@@ -1,0 +1,8 @@
+# Messages
+
+pets.list.title={0,choice,0#No pets|1#One pet|1<{0,number,integer} pets}
+warning.metamask= <i class="fas fa-exclamation-triangle"></i> To participate please <a href="https://metamask.io/" class="alert-link" target="_blank">install MetaMask</a>.
+warning.character_limit=Currently we limit names to 32 alphanumerics (A-Z, 0-9)
+
+input.placeholder.change_name=Enter name
+page.empty.generic=Nothing to display.

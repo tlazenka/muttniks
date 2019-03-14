@@ -1,0 +1,45 @@
+{
+  "name": "muttniks",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.4",
+    "@fortawesome/free-brands-svg-icons": "^5.4.1",
+    "@fortawesome/free-solid-svg-icons": "^5.3.1",
+    "@fortawesome/react-fontawesome": "^0.1.3",
+    "@material-ui/core": "^3.2.2",
+    "bootstrap": "^4.1.3",
+    "classnames": "^2.2.6",
+    "decimal.js-light": "^2.4.1",
+    "dotenv": "^6.0.0",
+    "es5-shim": "^4.5.12",
+    "es6-shim": "^0.35.4",
+    "notistack": "^0.3.4",
+    "popper.js": "^1.14.3",
+    "portis": "^1.3.1",
+    "prop-types": "^15.6.2",
+    "query-string": "5.1.1",
+    "react": "^16.4.2",
+    "react-document-title": "^2.0.3",
+    "react-dom": "^16.4.2",
+    "react-ga": "^2.5.3",
+    "react-infinite-scroller": "^1.2.0",
+    "react-refetch": "^2.0.0",
+    "react-router-dom": "^4.3.1",
+    "react-router-hash-link": "^1.2.0",
+    "react-scripts": "1.1.5",
+    "reactstrap": "^6.4.0",
+    "truffle-contract": "^3.0.6",
+    "web3-old": "npm:web3@0.20.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://app:9000",
+  "devDependencies": {
+    "flow-bin": "^0.80.0"
+  }
+}

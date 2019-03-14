@@ -1,0 +1,8 @@
+FROM jlesage/firefox:v1.4.0
+
+WORKDIR /var/tmp
+
+RUN wget https://github.com/MetaMask/metamask-extension/releases/download/v5.3.5/metamask-firefox-5.3.5.zip
+
+RUN mkdir metamask
+RUN unzip metamask-firefox-5.3.5.zip -d metamask

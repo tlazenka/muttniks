@@ -1,0 +1,7 @@
+FROM node:7.10.1-wheezy
+
+RUN npm install -g ganache-cli@6.1.0
+
+EXPOSE 7545
+
+CMD ganache-cli --hostname=0.0.0.0

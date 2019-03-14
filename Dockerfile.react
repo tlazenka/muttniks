@@ -1,0 +1,17 @@
+FROM node:9.6.1
+
+ENV APP_HOME /app/ui
+WORKDIR $APP_HOME
+
+RUN yarn global add flow-bin@0.80.0
+RUN yarn global add flow-typed@2.5.1
+RUN yarn global add flow-watch@1.1.3
+
+COPY ./ui/package.json .
+COPY ./ui/yarn.lock .
+
+RUN yarn
+
+COPY . .
+
+CMD ["yarn", "start"]
