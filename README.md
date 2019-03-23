@@ -1,15 +1,32 @@
 # Cheat sheet
 
-Run each of these commands in separate Terminal windows.
+If it's not installed, you'll need to install [Docker](https://www.docker.com/get-started) first. Then, run each of these commands in separate Terminal windows.
 
-First, we need to start our blockchain and deploy our smart contract:
+First, we need to start our blockchain:
 
 - `docker-compose up ganache`
+
+When it's ready, you'll see `Listening on 0.0.0.0:7545` a few lines down in the Terminal output.
+
+Then, we need to deploy our smart contract:
+
 - `docker-compose run --rm truffle truffle migrate --network development`
+
+When it's done, you'll see:
+
+```
+Saving successful migration to network...
+  ... 0x36b7b157b468782e6eec6ab0b093dbbd5301c8cb5622fde8dff4c5b5c9e9a707
+Saving artifacts...
+```
+
+in the output, and it will quit.
 
 Next, let's start up our main server
 
 - `docker-compose up app`
+
+When it's ready, you'll see `[info] p.c.s.AkkaHttpServer - Listening for HTTP on /0.0.0.0:9000` in the output.
 
 Visit http://localhost:9000 to see the server-side rendered page
 
@@ -17,42 +34,35 @@ In addition, you can browse the "single-page application", which uses caching. T
 
 - `docker-compose up jobs`
 
-And then the single-page application with:
+When that is ready, you'll see `*** Start update cache` in the output.
+
+To then view the single-page application, run:
 
 - `docker-compose up react`
+
+When that is ready, you'll see `You can now view muttniks in the browser.` in the output.
 
 Visit http://localhost:3000 to see this version
 
 # Interactions
 
-## Plain browser
+In most browsers, you can navigate to http://localhost:9000 to interact with the contract as Account #1.
 
-You can navigate to http://localhost:9000 to interact with the contract as Account #1. Or, run:
-
-```
-docker-compose stop app
-docker-compose -f docker-compose.yml -f docker-compose.firefox.yml up app
-```
-
-And then:
+We also provide a Firefox Docker image with [MetaMask](https://metamask.io) available. To access it, in a Terminal window run:
 
 ```
-docker-compose up firefox
+docker-compose stop app; docker-compose -f docker-compose.yml -f docker-compose.firefox.yml up app
 ```
 
-Then, open http://localhost:5800 in a web browser to access it, or go to vnc://localhost:5900
-
-The password is `password`
-
-Go to http://app:9000 to interact with the contract.
-
-## MetaMask
-
-You can install the MetaMask extension in your browser, but we also include a Firefox image with it. To use, run:
+And then, in a new window:
 
 `docker-compose up firefox`
 
-Then, open http://localhost:5800 in a web browser to access it, or go to vnc://localhost:5900
+It's started once you see:
+
+`The VNC desktop is:`
+
+Next, open http://localhost:5800 in a web browser to access it, or go to vnc://localhost:5900
 
 The password is `password`
 
@@ -64,7 +74,7 @@ Click "Load Temporary Add-on..."
 
 Navigate to "Other Locations -> Computer -> var -> tmp -> metamask", select `manifest.json`, and click Open.
 
-Click "Continue", then "Import with seed phrase". Type into the Wallet Seed box the seed words from ganache. These are by default:
+In the MetaMask tab that pops up, click "Continue", then "Import with seed phrase". Type into the Wallet Seed box the seed words from ganache. These are by default:
 
 `candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`
 
@@ -94,17 +104,30 @@ curl --request POST \
 
 ```
 
-You can visit other URLs to see the data. These include:
+You can visit other URLs to see cached data (note that it may take a minute or so for these caches to be updated). These include:
 
 - Pets adopted by an adopter's address. For example this is for the first account: http://localhost:9000/api/petsByAdopter?adopter=0x627306090abab3a6e1400e9345bc60c78a8bef57
 
-- Cached pet names. This is for the second pet ID: http://localhost:5000/petName/2
+- Cached pet names. This is for the third pet ID: http://localhost:5000/petName/3
+
 
 # Development
+
+## Testing
 
 You can run the Solidity tests with:
 
 - `docker-compose run --rm truffle truffle test`
+
+For the following tests, be sure to have run:
+
+- `docker-compose up ganache`
+
+and
+
+- `docker-compose run --rm truffle truffle migrate --network development`
+
+as a prerequisite.
 
 You can run the Play! tests with:
 
@@ -117,6 +140,8 @@ You can run the Clojure tests with:
 You can run the React tests with:
 
 - `docker-compose run --rm react npm test`
+
+## Other
 
 When developing in React, you can use Flow to type check:
 
