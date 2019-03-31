@@ -77,6 +77,7 @@ class SlickPetDAO @Inject()(db: Database) extends PetDAO with Tables {
     )
   }
 
+  // TODO: use Slick insertOrUpdate: http://slick.lightbend.com/doc/3.1.0/queries.html#upserting
   def upsertPetAdopter(petExternalId: Long, adopterAddress: Option[String], createdAt: DateTime = DateTime.now(), updatedAt: Option[DateTime] = None)(implicit ec: ExecutionContext): Future[Int] = {
     val m = for {
       rowsUpdated <- petAdopters.filter(r => r.petExternalId === petExternalId).map(_.adopter).update(adopterAddress)

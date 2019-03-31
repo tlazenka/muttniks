@@ -60,6 +60,10 @@ class ApiController @Inject() (petDAO: PetDAO,
     }
   }
 
+  def lastKnownAdoptersUpdate(): Action[AnyContent] = Action.async { implicit request =>
+    homeController.lastKnownAdoptersUpdate().map { Ok(_) }
+  }
+
   def petsByAdopter(adopter: String, page: Int, pageSize: Int = defaultPageSize): Action[AnyContent] = Action.async { implicit request =>
     homeController.cachedPetsByAdopterJson(adopter: String, page: Int, pageSize: Int).map { Ok(_) }
   }

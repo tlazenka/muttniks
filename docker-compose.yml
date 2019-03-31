@@ -110,6 +110,45 @@ services:
       environment:
         - NODE_ENV=development
         
+
+  cli:
+    build:
+        context: .
+        dockerfile: Dockerfile.rust
+    volumes:
+      - .:/app
+    environment:
+      - API_BASE_URL=http://app:9000/
+      - CACHE_BASE_URL=http://jobs:5000/
+      - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
+      - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
+      - TEST_PET_ID=3
+      - TEST_ALLOW_ADOPTION_ERRORS=1
+    command: cargo test -- --nocapture 
+    links:
+      - app  
+      - jobs
+  
+  tool:
+    build:
+        context: .
+        dockerfile: Dockerfile.swift
+    volumes:
+      - .:/app
+    environment:
+      - API_BASE_URL=http://app:9000/
+      - CACHE_BASE_URL=http://jobs:5000/
+      - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
+      - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
+      - TEST_PET_ID=3
+      - TEST_ALLOW_ADOPTION_ERRORS=1
+    working_dir: /app/tool/Fetcher
+    command: swift test 
+    links:
+      - app  
+      - jobs
+
+
   web3j:
       build:
           context: .
