@@ -17,10 +17,13 @@ let urlSession: URLSession = {
 }()
 
 func randomAlphanumericString(length: Int) -> String  {
-    let scalars = [UnicodeScalar("a").value...UnicodeScalar("z").value, UnicodeScalar("A").value...UnicodeScalar("Z").value, UnicodeScalar("0").value...UnicodeScalar("9").value].joined()
-    let characters = scalars.map { Character(UnicodeScalar($0)!) }
+    enum Statics {
+        static let scalars = [UnicodeScalar("a").value...UnicodeScalar("z").value, UnicodeScalar("A").value...UnicodeScalar("Z").value, UnicodeScalar("0").value...UnicodeScalar("9").value].joined()
+
+        static let characters = scalars.map { Character(UnicodeScalar($0)!) }
+    }
     
-    let result = (0..<length).map { _ in characters.randomElement()! }
+    let result = (0..<length).map { _ in Statics.characters.randomElement()! }
     return String(result)
 }
 
