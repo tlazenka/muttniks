@@ -3,18 +3,18 @@ import class Foundation.Bundle
 import Shared
 
 let apiBaseUrl = URL(string: ProcessInfo.processInfo.environment["API_BASE_URL"]!)!
-let cacheBaseUrl =  URL(string: ProcessInfo.processInfo.environment["CACHE_BASE_URL"]!)!
-let petId = Int(ProcessInfo.processInfo.environment["TEST_PET_ID"]!)!
+let cacheBaseUrl = URL(string: ProcessInfo.processInfo.environment["CACHE_BASE_URL"]!)!
+
+let clientRequestTimeoutSeconds = Double(ProcessInfo.processInfo.environment["TEST_CLIENT_REQUEST_TIMEOUT_SECONDS"]!)!
+let clientResourceTimeoutSeconds = Double(ProcessInfo.processInfo.environment["TEST_CLIENT_RESOURCE_TIMEOUT_SECONDS"]!)!
+let cachePollDurationSeconds = Double(ProcessInfo.processInfo.environment["TEST_CACHE_POLL_DURATION_SECONDS"]!)!
+
 let account = ProcessInfo.processInfo.environment["TEST_ACCOUNT"]!
 let privateKey = ProcessInfo.processInfo.environment["TEST_PRIVATE_KEY"]!
-let allowAdoptionErrors = Int(ProcessInfo.processInfo.environment["TEST_ALLOW_ADOPTION_ERRORS"] ?? String(0))!;
 
-let urlSession: URLSession = {
-    let sessionConfiguration = URLSessionConfiguration.default
-    sessionConfiguration.timeoutIntervalForRequest = 30.0
-    sessionConfiguration.timeoutIntervalForResource = 30.0
-    return URLSession(configuration: sessionConfiguration)
-}()
+let petId = Int(ProcessInfo.processInfo.environment["TEST_PET_ID"]!)!
+
+let allowAdoptionErrors = Int(ProcessInfo.processInfo.environment["TEST_ALLOW_ADOPTION_ERRORS"] ?? String(0))!
 
 func randomAlphanumericString(length: Int) -> String  {
     enum Statics {
@@ -28,9 +28,20 @@ func randomAlphanumericString(length: Int) -> String  {
 }
 
 final class FetcherTests: XCTestCase {
-    func testAdoption() throws {
-        let sleepDuration: TimeInterval = 60
+    var urlSession: URLSession!
+    
+    override func setUp() {
+        super.setUp()
         
+        urlSession = {
+            let sessionConfiguration = URLSessionConfiguration.default
+            sessionConfiguration.timeoutIntervalForRequest = clientRequestTimeoutSeconds
+            sessionConfiguration.timeoutIntervalForResource = clientResourceTimeoutSeconds
+            return URLSession(configuration: sessionConfiguration)
+        }()
+    }
+    
+    func testAdoption() throws {
         print("Adopting: \(petId) from private key: \(privateKey) account: \(account)")
         
         do {
@@ -39,12 +50,15 @@ final class FetcherTests: XCTestCase {
         }
         catch {
             if allowAdoptionErrors == 0 {
+                print("Error adopting pet id: \(petId) message: \(error.localizedDescription)");
                 throw error
             }
             else {
                 print("Error adopting pet id: \(petId) but ignoring due to TEST_ALLOW_ADOPTION_ERRORS being set to: \(allowAdoptionErrors)");
             }
         }
+        
+        let sleepDuration: TimeInterval = cachePollDurationSeconds
 
         do {
             var x = 0
@@ -63,22 +77,23 @@ final class FetcherTests: XCTestCase {
 
                 Thread.sleep(forTimeInterval: sleepDuration)
             }
+            
+            let getPetsByAdopterResult = try getPets(urlSession: urlSession, baseUrl: apiBaseUrl, adopter: account)
+            print("getPetsByAdopterResult: \(getPetsByAdopterResult)");
+            
+            let pets = getPetsByAdopterResult.filter { $0.externalId == petId }
+            XCTAssert(pets.count == 1)
         }
         
-        let getPetsByAdopterResult = try getPets(urlSession: urlSession, baseUrl: apiBaseUrl, adopter: account)
-        print("getPetsByAdopterResult: \(getPetsByAdopterResult)");
-        let pets = getPetsByAdopterResult.filter { $0.externalId == petId }
-        XCTAssert(pets.count == 1)
-        
-        let randomString = randomAlphanumericString(length: 16)
-        
-        print("Assigning name: \(randomString) to: \(petId)")
-        
-        let assignNameToPetResult = try assignNameToPet(urlSession: urlSession, baseUrl: apiBaseUrl, privateKey: privateKey, petId: petId, name: randomString)
-        
-        print("assignNameToPetResult: \(assignNameToPetResult)")
-
         do {
+            let randomString = randomAlphanumericString(length: 16)
+            
+            print("Assigning name: \(randomString) to: \(petId)")
+            
+            let assignNameToPetResult = try assignNameToPet(urlSession: urlSession, baseUrl: apiBaseUrl, privateKey: privateKey, petId: petId, name: randomString)
+            
+            print("assignNameToPetResult: \(assignNameToPetResult)")
+            
             var x = 0
             
             while true {

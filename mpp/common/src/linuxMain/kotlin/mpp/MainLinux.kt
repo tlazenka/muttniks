@@ -1,0 +1,4 @@
+package mpp
+
+fun main() {
+}

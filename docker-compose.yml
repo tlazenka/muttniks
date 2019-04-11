@@ -120,6 +120,8 @@ services:
     environment:
       - API_BASE_URL=http://app:9000/
       - CACHE_BASE_URL=http://jobs:5000/
+      - TEST_CLIENT_TIMEOUT_SECONDS=30
+      - TEST_CACHE_POLL_DURATION_SECONDS=60
       - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
       - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
       - TEST_PET_ID=3
@@ -128,6 +130,33 @@ services:
     links:
       - app  
       - jobs
+      
+  mpp:
+    build:
+        context: .
+        dockerfile: Dockerfile.kotlin
+    volumes:
+      - .:/app
+    environment:
+      - API_BASE_URL=http://app:9000/
+      - CACHE_BASE_URL=http://jobs:5000/
+      - TEST_CLIENT_TIMEOUT_SECONDS=30
+      - TEST_CACHE_POLL_DURATION_SECONDS=60
+      - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
+      - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
+      - TEST_PET_ID=3
+      - TEST_ALLOW_ADOPTION_ERRORS=1
+    command: gradle linuxTest 
+    links:
+      - app  
+      - jobs
+    volumes_from:
+     - konan
+
+  konan:
+    image: centos:7
+    volumes:
+      - ~/.konan:/root/.konan:rw
   
   tool:
     build:
@@ -138,6 +167,9 @@ services:
     environment:
       - API_BASE_URL=http://app:9000/
       - CACHE_BASE_URL=http://jobs:5000/
+      - TEST_CLIENT_REQUEST_TIMEOUT_SECONDS=30
+      - TEST_CLIENT_RESOURCE_TIMEOUT_SECONDS=60
+      - TEST_CACHE_POLL_DURATION_SECONDS=30
       - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
       - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
       - TEST_PET_ID=3
