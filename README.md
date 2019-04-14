@@ -151,6 +151,10 @@ To run the Swift version:
 
 `docker-compose run --rm tool`
 
+To run the Kotlin version:
+
+`docker-compose run --rm mpp`
+
 ## Other
 
 When developing in React, you can use Flow to type check:
