@@ -15,6 +15,7 @@ GET     /api/allPets                    controllers.ApiController.pets(page: Int
 GET     /api/pet                        controllers.ApiController.pet(externalId: Long)
 GET     /api/petsByAdopter              controllers.ApiController.petsByAdopter(adopter: String, page: Int ?= 0)
 GET     /api/petsAndAdopters            controllers.ApiController.petsAndAdopters()
+GET     /api/lastKnownAdoptersUpdate    controllers.ApiController.lastKnownAdoptersUpdate()
 GET     /api/numPets                    controllers.ApiController.numPets()
 POST    /api/adopt                      controllers.ApiController.adopt(petId: Long, privateKey: String)
 POST    /api/assignName                 controllers.ApiController.assignName(petId: Long, name: String, privateKey: String)

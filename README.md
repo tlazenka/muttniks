@@ -141,6 +141,20 @@ You can run the React tests with:
 
 - `docker-compose run --rm react npm test`
 
+## Integration tests
+
+To run the integration tests, you'll need to set up the `ganache`, `truffle`, `app`, and `jobs` services as described in the Cheat sheet. Then, to run the Rust version, run:
+
+`docker-compose run --rm cli`
+
+To run the Swift version:
+
+`docker-compose run --rm tool`
+
+To run the Kotlin version:
+
+`docker-compose run --rm mpp`
+
 ## Other
 
 When developing in React, you can use Flow to type check:

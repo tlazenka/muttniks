@@ -4,6 +4,7 @@ import java.io.InputStream
 
 import javax.inject.{Inject, Singleton}
 import java.math.BigInteger
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 import com.muttniks.pet._
@@ -16,6 +17,7 @@ import org.web3j.crypto.Credentials
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import play.Environment
+import play.api.cache.AsyncCacheApi
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
@@ -37,10 +39,13 @@ object PetListPageType extends Enumeration {
 class HomeController @Inject() (petDAO: PetDAO,
                                 petDAOExecutionContext: PetDAOExecutionContext,
                                 ws: WSClient,
+                                cache: AsyncCacheApi,
                                 environment: Environment,
                                 cc: ControllerComponents) extends AbstractController(cc) {
 
   private val logger: Logger = org.slf4j.LoggerFactory.getLogger(this.getClass)
+
+  private val adoptersLastUpdatedKey = "adopters_last_updated"
 
   val defaultPageSize: Int = sys.env("PET_PAGE_SIZE").toInt
 
@@ -106,8 +111,19 @@ class HomeController @Inject() (petDAO: PetDAO,
       petsAndAdopters <- petsAndAdopters()
       j = petsAndAdopters.map(i => petDAO.upsertPetAdopter(i._1.externalId, Some(i._2)))
       m <- Future.sequence(j)
+      _ <- cache.set(adoptersLastUpdatedKey, Instant.now.getEpochSecond)
     }
     yield m.length
+  }
+
+  def lastKnownAdoptersUpdate(): Future[JsObject] = {
+    for {
+      lastUpdated <- cache.get[Long](adoptersLastUpdatedKey)
+      result = JsObject(Map(
+        ("adoptersLastUpdated", Json.toJson(lastUpdated))
+      ))
+    }
+      yield result
   }
 
   def cachedPetsByAdopter(adopter: String, page: Int, pageSize: Int): Future[Page[Pet]] = {
