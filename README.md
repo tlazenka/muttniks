@@ -1,3 +1,9 @@
+# Muttniks: An open source dapp to show you how we built Astro Ledger
+
+Launching a dapp may not be as hard as launching a rocket...but it’s no moonwalk, either. A dapp, portmanteau of "decentralized app," is any app that runs on decentralized infrastructure, like on Ethereum. For your coding pleasure, our team is happy to present Muttniks, a friendly Ethereum space doggo "kernel" (or kennel) that you can build from the comfort of your spacecraft. Muttniks is an open source sample dapp, built to guide you through our exciting journey with [Astro Ledger](https://www.astroledger.org). Like the real stars and planets featured on astroledger.org, you can securely adopt, name, and trade Ethereum space doggos with Muttniks (and then donate your testnet ETH to build more Laika monuments).
+
+[_Read More_](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
+
 # Cheat sheet
 
 If it's not installed, you'll need to install [Docker](https://www.docker.com/get-started) first. Then, run each of these commands in separate Terminal windows.
@@ -164,3 +170,7 @@ When developing in React, you can use Flow to type check:
 We use `web3j` to easily talk to the contracts in Scala. You can generate this code with:
 
 - `docker-compose run --rm web3j /web3j-3.3.1/bin/web3j truffle generate /code/sol/build/contracts/Adoption.json -o /code/app -p contracts`
+
+# Acknowledgements
+
+See [LICENSE-THIRD-PARTY](LICENSE-THIRD-PARTY).
