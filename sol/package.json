@@ -11,7 +11,7 @@
     "debug": "3.0.1",
     "eth-random": "0.0.4-alpha.1",
     "ethereumjs-testrpc": "6.0.1",
-    "npm": "^5.7.1",
+    "npm": "^6.14.6",
     "openzeppelin-solidity": "1.9.0",
     "truffle": "4.1.8",
     "truffle-assertions": "^0.7.2",
