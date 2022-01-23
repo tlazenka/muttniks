@@ -5,12 +5,10 @@ name := """muttniks"""
 
 version := "1.1-SNAPSHOT"
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.12"
 
 initialize := {
   val _ = initialize.value
-  if (sys.props("java.specification.version") != "1.8")
-    sys.error("Java 8 is required for this project.")
 }
 
 lazy val flyway = (project in file("modules/flyway"))
@@ -28,9 +26,9 @@ lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .settings(
     libraryDependencies += guice,
-    libraryDependencies += cache,
+    libraryDependencies += caffeine,
     libraryDependencies += ws,
-    libraryDependencies += "com.typesafe.play" % "play-json-joda_2.11" % "2.6.0",
+    libraryDependencies += "com.typesafe.play" %% "play-json-joda" % "2.7.4",
     libraryDependencies += "org.web3j" % "core" % "3.3.1",
     libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
     libraryDependencies += "com.h2database" % "h2" % "1.4.196" % Test,

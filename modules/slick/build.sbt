@@ -2,14 +2,14 @@ import slick.codegen.SourceCodeGenerator
 import slick.{ model => m }
 
 libraryDependencies ++= Seq(
-  "com.zaxxer" % "HikariCP" % "2.4.1",
-  "com.typesafe.slick" %% "slick" % "3.1.1",
-  "com.typesafe.slick" %% "slick-hikaricp" % "3.1.1",
-  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
-  "com.github.tminglei" %% "slick-pg" % "0.12.0",
-  "com.github.tminglei" %% "slick-pg_play-json" % "0.12.0",
-  "com.github.tminglei" %% "slick-pg_joda-time" % "0.12.0",
-  "com.github.tototoshi" %% "slick-joda-mapper" % "2.1.0"
+  "com.zaxxer" % "HikariCP" % "2.7.9",
+  "com.typesafe.slick" %% "slick" % "3.2.3",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3",
+  "org.postgresql" % "postgresql" % "42.2.14",
+  "com.github.tminglei" %% "slick-pg" % "0.17.1",
+  "com.github.tminglei" %% "slick-pg_play-json" % "0.17.1",
+  "com.github.tminglei" %% "slick-pg_joda-time" % "0.17.1",
+  "com.github.tototoshi" %% "slick-joda-mapper" % "2.3.0"
 )
 
 lazy val databaseUrl = sys.env.getOrElse("JDBC_URL", "jdbc:postgresql:muttniks")
@@ -41,4 +41,4 @@ slickCodegenCodeGenerator := { (model:  m.Model) =>
   }
 }
 
-sourceGenerators in Compile <+= slickCodegen
+sourceGenerators in Compile += { slickCodegen }

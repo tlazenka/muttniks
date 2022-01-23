@@ -53,6 +53,10 @@ class MainStateProvider extends Component<{}, MainStateProviderState> {
 
   async componentDidMount() {
     try {
+      if ((window.ethereum) && (typeof window.ethereum.send === "function")) {
+        await window.ethereum.send('eth_requestAccounts');
+      }
+
       const web3: Web3Type = (await web3Helpers.getWeb3).web3;
       this.setState({
         web3: web3,
