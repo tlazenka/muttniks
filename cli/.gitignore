@@ -1,8 +1,0 @@
-/target
-**/*.rs.bk
-
-/.idea
-
-# mac
-.DS_Store
-*.iml
