@@ -34,9 +34,7 @@ Next, let's start up our main server
 
 When it's ready, you'll see `[info] p.c.s.AkkaHttpServer - Listening for HTTP on /0.0.0.0:9000` in the output.
 
-Visit http://localhost:9000 to see the server-side rendered page
-
-In addition, you can browse the "single-page application", which uses caching. The caching bit is started with:
+To start the card name cache, run:
 
 - `docker-compose up jobs`
 
@@ -48,50 +46,11 @@ To then view the single-page application, run:
 
 When that is ready, you'll see `You can now view muttniks in the browser.` in the output.
 
-Visit http://localhost:3000 to see this version
+Visit http://localhost:3000 to see it
 
 # Interactions
 
-In most browsers, you can navigate to http://localhost:9000 to interact with the contract as Account #1.
-
-We also provide a Firefox Docker image with [MetaMask](https://metamask.io) available. To access it, in a Terminal window run:
-
-```
-docker-compose stop app; docker-compose -f docker-compose.yml -f docker-compose.firefox.yml up app
-```
-
-And then, in a new window:
-
-`docker-compose up firefox`
-
-It's started once you see:
-
-`The VNC desktop is:`
-
-Next, open http://localhost:5800 in a web browser to access it, or go to vnc://localhost:5900
-
-The password is `password`
-
-In the Firefox address bar that appears, go to:
-
-`about:debugging`
-
-Click "Load Temporary Add-on..."
-
-Navigate to "Other Locations -> Computer -> var -> tmp -> metamask", select `manifest.json`, and click Open.
-
-In the MetaMask tab that pops up, click "Continue", then "Import with seed phrase". Type into the Wallet Seed box the seed words from ganache. These are by default:
-
-`candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`
-
-Enter a New Password, then click Import. Accept a few terms and notices, then in the main window change from "Main Ethereum Network" to "Custom RPC"
-
-Type in http://ganache:7545 as "New RPC URL", and click Save
-
-Open a new tab and navigate to http://app:9000 in a new address bar
-
-
-## API
+In Firefox and Chrome, you can use [MetaMask](https://metamask.io) alongside the http://localhost:3000 webpage to interact with the contract.
 
 If you don't want to use MetaMask, you can pass up data via URLs and parameters (these use your private key as a URL parameter, so are not recommended in production).
 
@@ -149,17 +108,12 @@ You can run the React tests with:
 
 ## Integration tests
 
-To run the integration tests, you'll need to set up the `ganache`, `truffle`, `app`, and `jobs` services as described in the Cheat sheet. Then, to run the Rust version, run:
+To run the integration tests, you'll need to set up the `ganache`, `truffle`, `app`, and `jobs` services as described in the Cheat sheet.
 
-`docker-compose run --rm cli`
-
-To run the Swift version:
+To then run Swift integration tests:
 
 `docker-compose run --rm tool`
 
-To run the Kotlin version:
-
-`docker-compose run --rm mpp`
 
 ## Other
 

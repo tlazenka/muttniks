@@ -6,10 +6,8 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 
 resolvers += "Flyway" at "https://flywaydb.org/repo"
 
-resolvers += "Flyway" at "https://davidmweber.github.io/flyway-sbt.repo"
-
 // Database migration
-addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.2.0")
+addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "5.0.0")
 
 // Slick code generation
 // https://github.com/tototoshi/sbt-slick-codegen
