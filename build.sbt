@@ -34,9 +34,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "com.h2database" % "h2" % "1.4.196" % Test,
     javaOptions in Test += "-Dconfig.file=conf/application.test.conf",
     unmanagedResourceDirectories in Compile += (baseDirectory.value / "sol" / "build" / "contracts"),
-    mappings in Universal ++= directory(baseDirectory.value  / "sol" / "build" / "contracts" / "Adoption.json"),
-    // Adding this means no explicit import in *.scala.html files
-    TwirlKeys.templateImports += "com.muttniks.pet.Pet"
+    mappings in Universal ++= directory(baseDirectory.value  / "sol" / "build" / "contracts" / "Adoption.json")
   ).aggregate(api, slick)
   .dependsOn(api, slick, flyway)
 

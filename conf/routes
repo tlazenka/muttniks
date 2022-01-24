@@ -2,12 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                               controllers.FrontEndController.index
-
-GET     /pets                           controllers.FrontEndController.all(page: Int ?= 0)
-
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file: String)
 
@@ -19,5 +13,3 @@ GET     /api/lastKnownAdoptersUpdate    controllers.ApiController.lastKnownAdopt
 GET     /api/numPets                    controllers.ApiController.numPets()
 POST    /api/adopt                      controllers.ApiController.adopt(petId: Long, privateKey: String)
 POST    /api/assignName                 controllers.ApiController.assignName(petId: Long, name: String, privateKey: String)
-
-GET     /*file                          controllers.FrontEndController.assetOrDefault(file)
