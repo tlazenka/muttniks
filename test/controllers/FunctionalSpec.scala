@@ -51,9 +51,9 @@ class FunctionalSpec extends PlaySpec with BaseOneAppPerSuite with MyApplication
       val adopter1 = s"adopter${r.nextInt()}"
       val adopter2 = s"adopter${r.nextInt()}"
 
-      petDao.upsertPetAdopter(pets(0).externalId, Some(adopter1))
-      petDao.upsertPetAdopter(pets(1).externalId, Some(adopter1))
-      petDao.upsertPetAdopter(pets(2).externalId, Some(adopter2))
+      Await.result(petDao.upsertPetAdopter(pets(0).externalId, Some(adopter1)), Duration.Inf)
+      Await.result(petDao.upsertPetAdopter(pets(1).externalId, Some(adopter1)), Duration.Inf)
+      Await.result(petDao.upsertPetAdopter(pets(2).externalId, Some(adopter2)), Duration.Inf)
 
       var adopted1 = Await.result(petDao.petsByAdopter(0, pets.size, adopter1), Duration.Inf).items
       var adopted2 = Await.result(petDao.petsByAdopter(0, pets.size, adopter2), Duration.Inf).items
@@ -67,7 +67,7 @@ class FunctionalSpec extends PlaySpec with BaseOneAppPerSuite with MyApplication
       adopted1.count(_.externalId == 2) shouldBe 1
       adopted2.count(_.externalId == 3) shouldBe 1
 
-      petDao.upsertPetAdopter(pets(0).externalId, Some(adopter2))
+      Await.result(petDao.upsertPetAdopter(pets(0).externalId, Some(adopter2)), Duration.Inf)
 
       adopted1 = Await.result(petDao.petsByAdopter(0, pets.size, adopter1), Duration.Inf).items
       adopted2 = Await.result(petDao.petsByAdopter(0, pets.size, adopter2), Duration.Inf).items

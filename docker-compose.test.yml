@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  app:
+    depends_on:
+     - db
+     - ganache
+     - truffle
+    command: ["./wait-for-it.sh", "ganache:7545", "--", "./wait-for-it.sh", "db:5432", "--", "sbt", "testWithMigrate"]
+
+  truffle:
+      depends_on:
+        - ganache
+      command: ["../wait-for-it.sh", "ganache:7545", "--", "truffle", "migrate", "--network", "development"]

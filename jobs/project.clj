@@ -5,7 +5,7 @@
                  [compojure "1.4.0"]
                  [ring/ring-jetty-adapter "1.4.0"]
                  [clojurewerkz/quartzite "1.1.0"]
-                 [com.taoensso/carmine "2.19.1"]
+                 [com.taoensso/carmine "2.20.0"]
                  [cheshire "5.8.1"]
                  [clj-http "3.9.1"]
                  [org.web3j/core "3.3.1"]

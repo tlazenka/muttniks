@@ -1,7 +1,7 @@
-version: '2'
+version: '2.1'
 services:
   app:
-    image: ysihaoy/scala-play:2.12.3-2.6.2-sbt-0.13.15
+    image: mozilla/sbt:11.0.8_1.3.13
     ports:
      - 9000:9000
      - 5005:5005
@@ -29,8 +29,9 @@ services:
     environment:
       - POSTGRES_DB=muttniks
       - POSTGRES_USER=muttniks
+      - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_PASSWORD=
-      
+
   jobs:
     build:
       context: .
@@ -64,16 +65,14 @@ services:
      - ~/.ivy2:/home/docker/.ivy2:rw
      - ~/.sbt:/root/.sbt:rw
      - ~/.sbt:/home/docker/.sbt:rw
-     
+
   lein:
     image: centos:7
     volumes:
       - ~/.m2:/root/.m2:rw
-     
+
   truffle:
-      build:
-          context: .
-          dockerfile: Dockerfile.truffle
+      image: tlazenka/muttniks-truffle:1.0
       volumes:
         - .:/app
         - /app/sol/node_modules
@@ -110,55 +109,7 @@ services:
       environment:
         - NODE_ENV=development
         
-
-  cli:
-    build:
-        context: .
-        dockerfile: Dockerfile.rust
-    volumes:
-      - .:/app
-    environment:
-      - API_BASE_URL=http://app:9000/
-      - CACHE_BASE_URL=http://jobs:5000/
-      - TEST_CLIENT_TIMEOUT_SECONDS=30
-      - TEST_CACHE_POLL_DURATION_SECONDS=60
-      - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
-      - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
-      - TEST_PET_ID=3
-      - TEST_ALLOW_ADOPTION_ERRORS=1
-    command: cargo test -- --nocapture 
-    links:
-      - app  
-      - jobs
-      
-  mpp:
-    build:
-        context: .
-        dockerfile: Dockerfile.kotlin
-    volumes:
-      - .:/app
-    environment:
-      - API_BASE_URL=http://app:9000/
-      - CACHE_BASE_URL=http://jobs:5000/
-      - TEST_CLIENT_TIMEOUT_SECONDS=30
-      - TEST_CACHE_POLL_DURATION_SECONDS=60
-      - TEST_ACCOUNT=0x5aeda56215b167893e80b4fe645ba6d5bab767de
-      - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
-      - TEST_PET_ID=3
-      - TEST_ALLOW_ADOPTION_ERRORS=1
-    command: gradle linuxTest 
-    links:
-      - app  
-      - jobs
-    volumes_from:
-     - konan
-
-  konan:
-    image: centos:7
-    volumes:
-      - ~/.konan:/root/.konan:rw
-  
-  tool:
+  client:
     build:
         context: .
         dockerfile: Dockerfile.swift
@@ -174,12 +125,11 @@ services:
       - TEST_PRIVATE_KEY=8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
       - TEST_PET_ID=3
       - TEST_ALLOW_ADOPTION_ERRORS=1
-    working_dir: /app/tool/Fetcher
+    working_dir: /app/client/Fetcher
     command: swift test 
     links:
       - app  
       - jobs
-
 
   web3j:
       build:
@@ -187,19 +137,3 @@ services:
           dockerfile: Dockerfile.web3j
       volumes:
         - .:/code
-          
-  firefox:
-      build:
-          context: .
-          dockerfile: Dockerfile.firefox
-      shm_size: '2gb'
-      ports:
-        - "5800:5800"
-        - "5900:5900"
-      environment:
-        - VNC_PASSWORD=password
-      links:
-        - app
-        - jobs
-        - ganache
-        - react

@@ -4,10 +4,8 @@
     ))
 
 (def server1-conn {:pool {} :spec {
-                                   :host (or (System/getenv "REDIS_HOST") "redis")
-                                   :port (Integer. (or (System/getenv "REDIS_PORT") 6379))
-                                   :password (System/getenv "REDIS_PASSWORD")
-                                   }
+                                   :uri (or (System/getenv "REDIS_URL") "redis")
+							   }
                    })
 
 (defmacro wcar* [& body] `(car/wcar server1-conn ~@body))
