@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  jobs_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.lein
+    volumes:
+      - .:/app
+    volumes_from:
+     - lein
+    env_file:
+      - ./jobs/dev.env
+    command: lein test

@@ -1,0 +1,22 @@
+version: '2.1'
+services:
+  react_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.react
+    volumes:
+      - .:/app
+      - /app/ui/node_modules
+      - ./sol/build/contracts/Adoption.json:/app/ui/src/build/contracts/Adoption.json
+      - ./react.env:/app/ui/.env
+    environment:
+      - NODE_ENV=development
+      - CI=true
+    depends_on:
+      - truffle
+    command: [ "../wait-for-it.sh", "ganache:7545", "--", "npm", "test", "--no-watch" ]
+
+  truffle:
+    depends_on:
+      - ganache
+    command: ["../wait-for-it.sh", "ganache:7545", "--", "truffle", "migrate", "--network", "development"]

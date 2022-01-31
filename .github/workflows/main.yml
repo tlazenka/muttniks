@@ -9,11 +9,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-app:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Play! test
-        run: docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from app app
+      - name: sbt test
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.app.yml up --exit-code-from app app
+
+  test-jobs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: lein test
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.jobs.yml up --exit-code-from jobs_test jobs_test
+
+  test-truffle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: truffle test
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.truffle.yml up --exit-code-from truffle_test truffle_test
+
+  test-react:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: truffle migrate
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.react.yml up --exit-code-from truffle truffle
+
+      - name: npm test
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.react.yml up --exit-code-from react_test react_test
+
+      - name: flow check
+        run: docker-compose -f docker-compose.yml -f docker-compose.test.react.yml run --rm react_test flow check
