@@ -112,7 +112,7 @@ To run the integration tests, you'll need to set up the `ganache`, `truffle`, `a
 
 To then run Swift integration tests:
 
-`docker-compose run --rm tool`
+`docker-compose run --rm client`
 
 
 ## Other
@@ -127,4 +127,4 @@ We use `web3j` to easily talk to the contracts in Scala. You can generate this c
 
 # Acknowledgements
 
-See [LICENSE-THIRD-PARTY](LICENSE-THIRD-PARTY).
+See [LICENSE](LICENSE).

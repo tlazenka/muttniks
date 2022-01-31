@@ -1,0 +1,12 @@
+version: '2.1'
+services:
+  truffle_test:
+    image: tlazenka/muttniks-truffle:1.0
+    volumes:
+      - .:/app
+      - /app/sol/node_modules
+      - ./truffle.js.docker:/app/sol/truffle.js
+    links:
+      - ganache
+    tty: true
+    command: ["../wait-for-it.sh", "ganache:7545", "--", "truffle", "test"]
