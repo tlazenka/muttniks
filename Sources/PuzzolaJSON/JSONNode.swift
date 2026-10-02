@@ -45,9 +45,7 @@ public struct JSONNode: Identifiable {
             $0.filtering(search)
         }
 
-        let matches =
-            name.localizedCaseInsensitiveContains(search) || path.localizedCaseInsensitiveContains(search)
-            || summary.localizedCaseInsensitiveContains(search)
+        let matches = name.localizedCaseInsensitiveContains(search)
 
         guard matches || !filteredChildren.isEmpty else {
             return nil
@@ -204,5 +202,68 @@ public extension JSONNode {
         let filtered = children.compactMap { $0.filtering(filter) }
         guard !filtered.isEmpty else { return nil }
         return JSONNode(id: id, name: name, path: path, value: value, children: filtered)
+    }
+
+    func filtering(fieldName: String, categoricalValue: String?) -> JSONNode? {
+        let filteredChildren = children.compactMap {
+            $0.filtering(fieldName: fieldName, categoricalValue: categoricalValue)
+        }
+
+        let matchesName = name.localizedCaseInsensitiveCompare(fieldName) == .orderedSame
+        let matchesValue: Bool
+        if let categoricalValue {
+            switch value {
+            case .string(let value):
+                matchesValue = value.localizedCaseInsensitiveCompare(categoricalValue) == .orderedSame
+            case .bool(let value):
+                matchesValue =
+                    (value ? "true" : "false")
+                    .localizedCaseInsensitiveCompare(categoricalValue) == .orderedSame
+            default:
+                matchesValue = false
+            }
+        } else {
+            switch value {
+            case .string, .bool:
+                matchesValue = true
+            default:
+                matchesValue = false
+            }
+        }
+
+        guard (matchesName && matchesValue) || !filteredChildren.isEmpty else {
+            return nil
+        }
+
+        return JSONNode(
+            id: id,
+            name: name,
+            path: path,
+            value: value,
+            children: filteredChildren
+        )
+    }
+
+    func containsCategorical(name: String, value: String) -> Bool {
+        if self.name.localizedCaseInsensitiveCompare(name) == .orderedSame {
+            switch self.value {
+            case .string(let candidate):
+                if candidate.localizedCaseInsensitiveCompare(value) == .orderedSame { return true }
+            case .bool(let candidate):
+                if (candidate ? "true" : "false")
+                    .localizedCaseInsensitiveCompare(value) == .orderedSame
+                {
+                    return true
+                }
+            default:
+                break
+            }
+        }
+        return children.contains { $0.containsCategorical(name: name, value: value) }
+    }
+
+    func asEmptyRoot() -> Self {
+        let root = self
+        return JSONNode(id: root.id, name: root.name, path: root.path, value: root.value, children: [])
     }
 }

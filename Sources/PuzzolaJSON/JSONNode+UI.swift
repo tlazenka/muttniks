@@ -37,6 +37,78 @@ public struct JSONNodeViewModel {
         self.root = root
     }
 
+    public func collectCategoricalNames(in node: JSONNode, into names: inout Set<String>) {
+        switch node.value {
+        case .string, .bool:
+            names.insert(node.name)
+        default:
+            break
+        }
+        for child in node.children {
+            collectCategoricalNames(in: child, into: &names)
+        }
+    }
+
+    public func categoricalValues(named fieldName: String) -> [String] {
+        var values = Set<String>()
+        for feature in featureNodes() {
+            collectCategoricalValues(named: fieldName, in: feature, into: &values)
+        }
+        return values.sorted {
+            $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+        }
+    }
+
+    public func collectCategoricalValues(
+        named fieldName: String,
+        in node: JSONNode,
+        into values: inout Set<String>
+    ) {
+        if node.name == fieldName {
+            switch node.value {
+            case .string(let value):
+                values.insert(value)
+            case .bool(let value):
+                values.insert(value ? "true" : "false")
+            default:
+                break
+            }
+        }
+        for child in node.children {
+            collectCategoricalValues(named: fieldName, in: child, into: &values)
+        }
+    }
+
+    public func facetedResultCount(fieldName: String, value: String) -> Int {
+        featureNodes().filter { $0.containsCategorical(name: fieldName, value: value) }.count
+    }
+
+    public func collectCategoricalFields(
+        in node: JSONNode,
+        valuesByPath: inout [String: Set<String>],
+        namesByPath: inout [String: String]
+    ) {
+        if let path = featureRelativePath(from: node.path) {
+            switch node.value {
+            case .string(let value):
+                valuesByPath[path, default: []].insert(value)
+                namesByPath[path] = node.name
+            case .bool(let value):
+                valuesByPath[path, default: []].insert(value ? "true" : "false")
+                namesByPath[path] = node.name
+            default:
+                break
+            }
+        }
+        for child in node.children {
+            collectCategoricalFields(in: child, valuesByPath: &valuesByPath, namesByPath: &namesByPath)
+        }
+    }
+
+    public func fieldName(for path: String) -> String {
+        path.split(separator: ".").last.map(String.init) ?? path
+    }
+
     public func initialFilter(path: String, value: JSONNode.Value) -> FieldFilter? {
         switch value {
         case .number(let text):
@@ -108,6 +180,36 @@ public enum FieldFilter: Equatable {
         switch self {
         case .minimum(let path, let value, _): "\(path) ≥ \(value.formatted())"
         case .category(let path, let value, _): "\(path) = \(value)"
+        }
+    }
+}
+
+public extension FieldFilter {
+    var path: String {
+        switch self {
+        case .minimum(let path, _, _), .category(let path, _, _):
+            return path
+        }
+    }
+
+    var analyticsProperties: [String: Any] {
+        switch self {
+        case .minimum(let path, let value, _):
+            return ["path": path, "kind": "numeric", "value": value]
+        case .category(let path, let value, _):
+            return ["path": path, "kind": "categorical", "value": value]
+        }
+    }
+}
+
+public extension JSONNode.Value {
+    var analyticsKind: String {
+        switch self {
+        case .number: return "numeric"
+        case .string, .bool: return "categorical"
+        case .null: return "null"
+        case .object: return "object"
+        case .array: return "array"
         }
     }
 }

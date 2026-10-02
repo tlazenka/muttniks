@@ -29,6 +29,14 @@ public struct SQLiteRow {
         }
         return String(cString: value)
     }
+
+    public func int(at index: Int32) -> Int {
+        Int(sqlite3_column_int64(statement, index))
+    }
+
+    public func double(at index: Int32) -> Double {
+        sqlite3_column_double(statement, index)
+    }
 }
 
 public final class Database {
