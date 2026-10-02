@@ -1,0 +1,137 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "title": "Puzzola",
+    "count": 8
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.6,
+        "place": "South of Yonakuni, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.9,
+          23.7,
+          20.0
+        ]
+      },
+      "id": "demo-001"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.8,
+        "place": "Northern California"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7,
+          40.4,
+          8.0
+        ]
+      },
+      "id": "demo-002"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 3.2,
+        "place": "Central Alaska"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -149.2,
+          63.1,
+          92.0
+        ]
+      },
+      "id": "demo-003"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.1,
+        "place": "Puerto Rico region"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.5,
+          18.2,
+          14.0
+        ]
+      },
+      "id": "demo-004"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 2.7,
+        "place": "Southern California"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.4,
+          34.1,
+          6.0
+        ]
+      },
+      "id": "demo-005"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 6.3,
+        "place": "Kermadec Islands region"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -177.8,
+          -29.7,
+          35.0
+        ]
+      },
+      "id": "demo-006"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.0,
+        "place": "Nevada"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.8,
+          38.2,
+          9.0
+        ]
+      },
+      "id": "demo-007"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 1.9,
+        "place": "Hawaii"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -155.3,
+          19.4,
+          3.0
+        ]
+      },
+      "id": "demo-008"
+    }
+  ]
+}

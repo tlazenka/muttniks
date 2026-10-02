@@ -1,0 +1,25 @@
+name: Earthquakes
+options:
+  bundleIdPrefix: com.puzzola
+  deploymentTarget:
+    iOS: "27.0"
+packages:
+  Puzzola:
+    path: ../
+targets:
+  PuzzolaDemo:
+    type: application
+    supportedDestinations: [iOS]
+    sources: [Sources]
+    dependencies:
+      - package: Puzzola
+        product: Puzzola
+      - package: Puzzola
+        product: PuzzolaUIKit
+      - package: Puzzola
+        product: PuzzolaJSON
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Earthquakes
+        UILaunchScreen: {}
