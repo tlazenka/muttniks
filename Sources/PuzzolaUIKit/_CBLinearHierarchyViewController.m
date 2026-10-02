@@ -66,8 +66,17 @@
             NSInteger depth = [self.depthByID[identifier] integerValue];
             UIListContentConfiguration *content = [UIListContentConfiguration subtitleCellConfiguration];
             content.text = node.title;
-            content.secondaryText = node.subtitle;
-            content.secondaryTextProperties.color = UIColor.secondaryLabelColor;
+            if (node.markerText.length > 0) {
+                content.secondaryText = [NSString stringWithFormat:@"%@   [%@]",
+                                         node.subtitle ?: @"",
+                                         node.markerText];
+                content.secondaryTextProperties.color = UIColor.systemIndigoColor;
+                content.secondaryTextProperties.font =
+                    [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+            } else {
+                content.secondaryText = node.subtitle;
+                content.secondaryTextProperties.color = UIColor.secondaryLabelColor;
+            }
             content.directionalLayoutMargins =
                 NSDirectionalEdgeInsetsMake(5, 12 + (depth * 20), 5, 12);
             cell.contentConfiguration = content;

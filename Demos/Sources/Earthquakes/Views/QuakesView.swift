@@ -8,10 +8,24 @@ struct QuakesView: View {
     @State var errorMessage: String?
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if let jsonRoot { JSONNodeView(root: jsonRoot) } else { ProgressView() }
+        TabView {
+            NavigationStack {
+                Group {
+                    if let jsonRoot {
+                        JSONNodeView(root: jsonRoot, analytics: provider.analytics)
+                    } else {
+                        ProgressView()
+                    }
+                }
             }
+            .tabItem {
+                Label("Home", systemImage: "icloud.slash")
+            }
+
+            WrappedView(analytics: provider.analytics)
+                .tabItem {
+                    Label("Wrapped", systemImage: "service.dog")
+                }
         }
         .task {
             do {
@@ -19,7 +33,17 @@ struct QuakesView: View {
                 jsonRoot = try JSONNode.loadEarthquakes()
             } catch { errorMessage = error.localizedDescription }
         }
-        .alert("Error", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+        .alert(
+            "Error",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: {
+                    if !$0 {
+                        errorMessage = nil
+                    }
+                }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "Unknown error")

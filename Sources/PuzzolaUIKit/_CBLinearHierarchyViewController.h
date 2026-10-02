@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *jsonPath;
 @property (nonatomic, readonly, nullable) NSString *sectionTitle;
 @property (nonatomic, readonly) NSArray<id<CBHierarchyNodeProvider>> *children;
+@property (nonatomic, readonly, nullable) NSString *markerText;
 @end
 
 @class _CBLinearHierarchyViewController;

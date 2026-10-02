@@ -3,9 +3,11 @@ import Puzzola
 
 final class QuakesProvider: @unchecked Sendable {
     let database: Database
+    let analytics: AnalyticsStore
 
     init(database: Database) throws {
         self.database = database
+        self.analytics = try AnalyticsStore(database: database)
         try database.execute(
             """
             CREATE TABLE IF NOT EXISTS earthquake_feed (

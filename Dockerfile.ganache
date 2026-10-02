@@ -1,7 +1,0 @@
-FROM node:16.10-bullseye
-
-RUN npm install -g ganache-cli@6.12.2
-
-EXPOSE 7545
-
-CMD ganache-cli --hostname=0.0.0.0
