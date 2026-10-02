@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["test_flow.py"]

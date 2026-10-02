@@ -1,0 +1,5 @@
+FROM ghcr.io/foundry-rs/foundry:v1.8.3
+
+USER root
+ARG FORGE_STD_VERSION=v1.16.1
+RUN git clone --depth 1 --branch "${FORGE_STD_VERSION}" https://github.com/foundry-rs/forge-std.git /opt/forge-std
