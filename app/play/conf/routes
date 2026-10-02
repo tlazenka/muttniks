@@ -1,0 +1,6 @@
+GET     /                      muttniks.controllers.SsrController.index(page: Int ?= 1)
+GET     /health                muttniks.controllers.HealthController.health
+GET     /pets/:id              muttniks.controllers.PetController.get(id: Long)
+POST    /pets/:id/likes        muttniks.controllers.LikeController.create(id: Long)
+
+GET     /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)

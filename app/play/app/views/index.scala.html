@@ -1,0 +1,71 @@
+@(pets: List[(muttniks.domain.PetListing, muttniks.domain.LikeCounts)], page: Int, pageSize: Int, total: Long, adoptionAddress: String, chainId: Long)
+@totalPages = @{
+    math.max(1L, (total + pageSize - 1) / pageSize)
+}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Muttniks</title>
+    </head>
+    <body data-contract="@adoptionAddress" data-chain-id="@chainId">
+        <main>
+            <header>
+                <div class="wallet"><button id="connect-wallet" type="button">
+                    Connect wallet</button><code id="wallet-address"></code></div>
+            </header>
+
+            <section class="catalog" aria-label="Pets">
+            @for((pet, counts) <- pets) {
+                <article class="pet-card" data-pet-id="@pet.id" data-adopter="@pet.adopter.getOrElse("")">
+                    <div class="pet-image">
+                    @pet.imageUrl match {
+                        case Some(url) => {
+                            <img src="@url" alt="@pet.name.getOrElse(s"Pet ${pet.id}")">
+                        }
+                        case None => {
+                            <img src="@routes.Assets.versioned("images/placeholder.png")" alt="">
+                        }
+                    }
+                    </div>
+                    <div class="pet-copy">
+                        <strong>@pet.name.getOrElse(s"Pet #${pet.id}")</strong>
+                        <small>@if(pet.adopter.isDefined) { Adopted } else { Available } · @counts.trusted likes</small>
+                        <div class="card-actions">
+                            <button class="like" type="button">Like</button>
+                            @if(pet.adopter.isEmpty) {
+                                <button class="adopt" type="button">Adopt</button>
+                            }
+                        </div>
+                        @if(pet.adopter.isDefined) {
+                            <details><summary>Owner actions</summary>
+                                <input class="recipient" placeholder="0x recipient" aria-label="Recipient">
+                                <button class="transfer" type="button">Transfer</button>
+                                <input class="pet-name" maxlength="32" placeholder="Name" aria-label="Pet name">
+                                <button class="assign-name" type="button">Assign name</button>
+                            </details>
+                        }
+                        <p class="status" aria-live="polite"></p>
+                    </div>
+                </article>
+            }
+            </section>
+
+            <nav class="pager" aria-label="Pet pager">
+                @if(page > 1) {
+                    <a class="button" href="/?page=@(page - 1)">Back</a>
+                } else {
+                    <span class="button disabled">Back</span>
+                }
+                <span>Page @page of @totalPages</span>
+                @if(page.toLong < totalPages) {
+                    <a class="button" href="/?page=@(page + 1)">Next</a>
+                } else {
+                    <span class="button disabled">Next</span>
+                }
+            </nav>
+        </main>
+        <script src="@routes.Assets.versioned("javascripts/wallet.js")" defer></script>
+    </body>
+</html>

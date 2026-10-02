@@ -1,0 +1,6 @@
+FROM python:3.13-slim
+WORKDIR /workspace/integration_tests
+COPY integration_tests/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY integration_tests/ ./
+CMD ["sh", "-c", "mypy *.py && pytest"]
