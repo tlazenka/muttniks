@@ -29,7 +29,7 @@ struct WrappedView: View {
             }
             .listStyle(.plain)
             .padding()
-            .navigationTitle("Wrapped")
+            .navigationTitle("Scrubapped")
             .task {
                 refresh()
             }

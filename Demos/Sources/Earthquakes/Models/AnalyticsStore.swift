@@ -190,8 +190,8 @@ final class AnalyticsStore: @unchecked Sendable {
             .init(
                 id: "totalScrubs",
                 eyebrow: "Not no scrubs",
-                value: "\(totalScrubs)",
-                detail: "scrubs done on this app install"
+                value: "\(totalScrubs) scrubs",
+                detail: "done on this app install"
             )
 
         )
@@ -329,8 +329,8 @@ final class AnalyticsStore: @unchecked Sendable {
                 .init(
                     id: "sessionSummary",
                     eyebrow: "Sessions",
-                    value: "\(sessionSummary.0)",
-                    detail: "interactions were part of your scrubbiest session \(sessionSummary.1)"
+                    value: "\(sessionSummary.0) interactions",
+                    detail: "made up your scrubbiest session \(sessionSummary.1)"
                 )
             )
         }
@@ -374,7 +374,7 @@ final class AnalyticsStore: @unchecked Sendable {
                     id: "upNext",
                     eyebrow: "Up Next",
                     value: "\(upNext.0) → \(upNext.1)",
-                    detail: "were fields that followed each other \(upNext.2) time(s)"
+                    detail: "followed each other \(upNext.2) time(s)"
                 )
             )
         }

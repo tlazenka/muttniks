@@ -24,7 +24,7 @@ struct QuakesView: View {
 
             WrappedView(analytics: provider.analytics)
                 .tabItem {
-                    Label("Wrapped", systemImage: "service.dog")
+                    Label("Scrubapped", systemImage: "service.dog")
                 }
         }
         .task {
