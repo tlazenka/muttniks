@@ -1,6 +1,6 @@
 # Puzzola/Muttniks/StateBlaster
 
-## Puzzola
+## Puzzola: a direct manipulation faceted JSON explorer built on SQLite
 
 First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
@@ -24,7 +24,7 @@ _or_
 
 `docker compose run --rm earthquakes "$.properties.mag >= 5"`
 
-## Muttniks
+## Muttniks: an open source dapp to show you how we built Astro Ledger 
 
 [`Muttniks`](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially also had SSR support via Twirl](https://github.com/tlazenka/muttniks/tree/v0.1/app/views)). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
 
@@ -40,7 +40,7 @@ This waits until an OK response from the Play health endpoint and then opens hom
 
 [Blast to the past](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
 
-## StateBlaster
+## StateBlaster: ???
 
 I'm simply going to post the `swift`/`gradle` commands here, because there's a good chance we're just going to try to get Generative AI to traipse through the code to try to summarize what's going on here, and then merge in what it outputs. In the meantime:
 
