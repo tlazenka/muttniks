@@ -57,7 +57,7 @@ struct OnboardingView: View {
             case .codeError:
                 switch model.state {
                 case .codeError(let witness, _, _):
-                    guard let authority = model.machine.authorizeCodeEntry(using: witness) else { return }
+                    guard let authority = model.machine.authorizeCodeEntryFromCodeError(using: witness) else { return }
                     model.machine.state = .codeEntry(consume authority)
                 default:
                     break
@@ -81,7 +81,7 @@ struct OnboardingView: View {
                     )
                 )
             } else {
-                guard let authority = model.machine.authorizeCodeEntry(using: witness) else { return }
+                guard let authority = model.machine.authorizeCodeEntryFromPhoneEntry(using: witness) else { return }
                 let number = PhoneNumber(rawValue: phone)
                 model.machine.state = .codeEntry(consume authority, phoneNumber: number)
                 path.append(.code(number))

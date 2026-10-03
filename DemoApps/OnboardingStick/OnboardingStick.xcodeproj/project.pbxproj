@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5870AB933058E743006E2007 /* StateBlaster in Frameworks */ = {isa = PBXBuildFile; productRef = 5870AB923058E743006E2007 /* StateBlaster */; };
+		58C5A82A3070BD8F007AD036 /* StateBlaster in Frameworks */ = {isa = PBXBuildFile; productRef = 58C5A8293070BD8F007AD036 /* StateBlaster */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58C5A82A3070BD8F007AD036 /* StateBlaster in Frameworks */,
 				5870AB933058E743006E2007 /* StateBlaster in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = OnboardingStick;
 			packageProductDependencies = (
 				5870AB923058E743006E2007 /* StateBlaster */,
+				58C5A8293070BD8F007AD036 /* StateBlaster */,
 			);
 			productName = Onboarding;
 			productReference = 58DC83BD30576EDC0073E414 /* OnboardingStick.app */;
@@ -101,7 +104,7 @@
 			mainGroup = 58DC83B430576EDC0073E414;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5870AB913058E743006E2007 /* XCLocalSwiftPackageReference "../../../StateBlasterSwift" */,
+				58C5A8283070BD8F007AD036 /* XCLocalSwiftPackageReference "../../../muttniks" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 58DC83BE30576EDC0073E414 /* Products */;
@@ -356,14 +359,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		5870AB913058E743006E2007 /* XCLocalSwiftPackageReference "../../../StateBlasterSwift" */ = {
+		58C5A8283070BD8F007AD036 /* XCLocalSwiftPackageReference "../../../muttniks" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../StateBlasterSwift;
+			relativePath = ../../../muttniks;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		5870AB923058E743006E2007 /* StateBlaster */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StateBlaster;
+		};
+		58C5A8293070BD8F007AD036 /* StateBlaster */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StateBlaster;
 		};
