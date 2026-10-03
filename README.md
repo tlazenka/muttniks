@@ -1,6 +1,8 @@
 # Puzzola/Muttniks/StateBlaster
 
-## Puzzola: a direct manipulation faceted JSON explorer built on SQLite
+[_muttnike](https://github.com/tlazenka/muttniks/tree/v0.1/app/views), yoked together by violence with a couple other things_
+
+## 🦨 Puzzola: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
 
 First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 

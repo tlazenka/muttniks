@@ -21,61 +21,61 @@ public struct ParsedJSONPath: Equatable, Sendable {
 }
 
 public enum JSONPathParser {
-    static let identifier = prefix(
+    static let identifier = regex(
         while: { $0.isLetter || $0.isNumber || $0 == "_" },
-        expected: "name"
+        expected: "member name"
     )
 
-    static let digits = prefix(
+    static let digits = regex(
         while: { $0.isNumber },
         expected: "integer"
     )
 
     static let member =
-        literal(".")
-        .flatMap { _ in identifier }
-        .map(JSONPathComponent.member)
+        const(".")
+            .flatMap { _ in identifier }
+            .map(JSONPathComponent.member)
 
     static let index =
-        literal("[")
-        .flatMap { _ in digits }
-        .flatMap { digits in
-            literal("]").map { _ in
-                JSONPathComponent.index(Int(digits)!)
+        const("[")
+            .flatMap { _ in digits }
+            .flatMap { digits in
+                const("]").map { _ in
+                    JSONPathComponent.index(Int(digits)!)
+                }
             }
-        }
 
     static let fromEnd =
-        literal("[")
-        .flatMap { _ in literal("#") }
-        .flatMap { _ in literal("-") }
-        .flatMap { _ in digits }
-        .flatMap { digits in
-            literal("]").map { _ in
-                JSONPathComponent.fromEnd(Int(digits)!)
+        const("[")
+            .flatMap { _ in const("#") }
+            .flatMap { _ in const("-") }
+            .flatMap { _ in digits }
+            .flatMap { digits in
+                const("]").map { _ in
+                    JSONPathComponent.fromEnd(Int(digits)!)
+                }
             }
-        }
 
     static let append =
-        literal("[")
-        .flatMap { _ in literal("#") }
-        .flatMap { _ in literal("]") }
-        .map { _ in JSONPathComponent.append }
+        const("[")
+            .flatMap { _ in const("#") }
+            .flatMap { _ in const("]") }
+            .map { _ in JSONPathComponent.append }
 
     static let component = oneOf([
         member,
         fromEnd,
         append,
-        index,
+        index
     ])
 
     public static let path =
-        literal("$")
-        .flatMap { _ in many(component) }
-        .map(ParsedJSONPath.init)
+        const("$")
+            .flatMap { _ in many(component) }
+            .map(ParsedJSONPath.init)
 
     public static func parse(_ source: String) -> Result<ParsedJSONPath, ParseError> {
-        path.run(ParseInput(source)).flatMap { value, rest in
+        path.parse(CharStream(source)).flatMap { value, rest in
             guard rest.isAtEnd else {
                 return .failure(
                     ParseError(offset: rest.offset, expected: "JSONPath component")

@@ -4,6 +4,8 @@
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
+import Do
+
 
 public enum ComparisonOperator: String, Equatable, Sendable {
     case equal = "="
@@ -41,7 +43,7 @@ public indirect enum Expression: Equatable, Sendable {
 
 public enum QueryParser {
     static let pathText = Parser<String> { input in
-        switch JSONPathParser.path.run(input) {
+        switch JSONPathParser.path.parse(input) {
         case .success((_, let rest)):
             return .success((String(input.source[input.index..<rest.index]), rest))
         case .failure(let error):
@@ -50,12 +52,12 @@ public enum QueryParser {
     }
 
     static let operation = oneOf([
-        literal(">=").map { _ in ComparisonOperator.greaterThanOrEqual },
-        literal("<=").map { _ in ComparisonOperator.lessThanOrEqual },
-        literal("!=").map { _ in ComparisonOperator.notEqual },
-        literal("=").map { _ in ComparisonOperator.equal },
-        literal(">").map { _ in ComparisonOperator.greaterThan },
-        literal("<").map { _ in ComparisonOperator.lessThan },
+        const(">=").map { _ in ComparisonOperator.greaterThanOrEqual },
+        const("<=").map { _ in ComparisonOperator.lessThanOrEqual },
+        const("!=").map { _ in ComparisonOperator.notEqual },
+        const("=").map { _ in ComparisonOperator.equal },
+        const(">").map { _ in ComparisonOperator.greaterThan },
+        const("<").map { _ in ComparisonOperator.lessThan }
     ])
 
     static let number = Parser<Double> { input in
@@ -108,36 +110,39 @@ public enum QueryParser {
 
     static let value = oneOf([
         quotedString,
-        literal("true").map { _ in QueryValue.bool(true) },
-        literal("false").map { _ in QueryValue.bool(false) },
-        literal("null").map { _ in QueryValue.null },
-        number.map(QueryValue.number),
+        const("true").map { _ in QueryValue.bool(true) },
+        const("false").map { _ in QueryValue.bool(false) },
+        const("null").map { _ in QueryValue.null },
+        number.map(QueryValue.number)
     ])
 
-    public static let comparison =
-        token(pathText)
-        .flatMap { path in
-            token(operation)
-                .flatMap { operation in
-                    token(value).map { value in
-                        Comparison(path: path, operation: operation, value: value)
-                    }
-                }
-        }
+    @Do
+    static func parseComparison(
+        _ input: CharStream
+    ) -> Result<(Comparison, CharStream), ParseError> {
+        let (path, afterPath) = #bind(token(pathText).parse(input))
+        let (operation, afterOperation) = #bind(token(operation).parse(afterPath))
+        let (value, rest) = #bind(token(value).parse(afterOperation))
+        (Comparison(path: path, operation: operation, value: value), rest)
+    }
+
+    public static let comparison = Parser<Comparison> { input in
+        parseComparison(input)
+    }
 
     static let conjunction = Parser<Expression> { input in
-        switch comparison.run(input) {
+        switch comparison.parse(input) {
         case .failure(let error):
             return .failure(error)
         case .success((let first, var rest)):
             var expression = Expression.comparison(first)
 
             while true {
-                switch token(literal("&&")).run(rest) {
+                switch token(const("&&")).parse(rest) {
                 case .failure:
                     return .success((expression, rest))
                 case .success((_, let afterOperator)):
-                    switch comparison.run(afterOperator) {
+                    switch comparison.parse(afterOperator) {
                     case .failure(let error):
                         return .failure(error)
                     case .success((let next, let afterComparison)):
@@ -150,18 +155,18 @@ public enum QueryParser {
     }
 
     public static let expression = Parser<Expression> { input in
-        switch conjunction.run(input) {
+        switch conjunction.parse(input) {
         case .failure(let error):
             return .failure(error)
         case .success((let first, var rest)):
             var expression = first
 
             while true {
-                switch token(literal("||")).run(rest) {
+                switch token(const("||")).parse(rest) {
                 case .failure:
                     return .success((expression, rest))
                 case .success((_, let afterOperator)):
-                    switch conjunction.run(afterOperator) {
+                    switch conjunction.parse(afterOperator) {
                     case .failure(let error):
                         return .failure(error)
                     case .success((let next, let afterConjunction)):
@@ -174,7 +179,7 @@ public enum QueryParser {
     }
 
     public static func parse(_ source: String) -> Result<Expression, ParseError> {
-        expression.run(ParseInput(source)).flatMap { value, rest in
+        expression.parse(CharStream(source)).flatMap { value, rest in
             guard rest.isAtEnd else {
                 return .failure(ParseError(offset: rest.offset, expected: "End of expression"))
             }
