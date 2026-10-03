@@ -60,7 +60,7 @@ let package = Package(
         ),
         .target(
             name: "PuzzolaParsers",
-            dependencies: [],
+            dependencies: ["Do"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],

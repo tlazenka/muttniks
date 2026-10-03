@@ -1,6 +1,8 @@
-# Puzzola/Muttniks/StateBlaster
+# [Puzzola](#-puzzola-a-direct-manipulation-faceted-json-explorer-built-on-sqlite-)/[Muttniks](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger)/[StateBlaster](#stateblaster-)
 
-## Puzzola: a direct manipulation faceted JSON explorer built on SQLite
+_I.e. Muttniks yoked together by violence with a couple other things_
+
+## 🦨 Puzzola: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
 
 First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
