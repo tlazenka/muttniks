@@ -1,6 +1,6 @@
-# Puzzola/Muttniks/StateBlaster
+# [Puzzola](#-puzzola-a-direct-manipulation-faceted-json-explorer-built-on-sqlite-)/[Muttniks](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger)/[StateBlaster](#stateblaster-)
 
-[_muttnike](https://github.com/tlazenka/muttniks/tree/v0.1/app/views), yoked together by violence with a couple other things_
+_I.e. Muttniks yoked together by violence with a couple other things_
 
 ## 🦨 Puzzola: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
 
