@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Blob" representedClassName="Blob" syncable="YES" codeGenerationType="class">
+        <attribute name="data" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Contact" representedClassName="Contact" syncable="YES" codeGenerationType="class">
+        <attribute name="cnContactIdentifier" attributeType="String"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="contacts" inverseEntity="User"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="cnContactIdentifier"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Door" representedClassName="Door" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Knock" representedClassName="Knock" syncable="YES" codeGenerationType="class">
+        <attribute name="acknowledgedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="destinationUserId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="receivedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sentDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sourceUserId" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="destinationUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="receivedKnocks" inverseEntity="User"/>
+        <relationship name="sourceUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="sentKnocks" inverseEntity="User"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
+        <attribute name="doorId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="hashedPhoneNumber" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="phoneNumber" attributeType="String"/>
+        <relationship name="contacts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Contact" inverseName="users" inverseEntity="Contact"/>
+        <relationship name="receivedKnocks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Knock" inverseName="destinationUser" inverseEntity="Knock"/>
+        <relationship name="sentKnocks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Knock" inverseName="sourceUser" inverseEntity="Knock"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+            <uniquenessConstraint>
+                <constraint value="phoneNumber"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>

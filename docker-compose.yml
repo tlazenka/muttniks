@@ -154,6 +154,14 @@ services:
     working_dir: /app
     command: swift format lint --recursive .
 
+  earthquakes:
+    build:
+        context: .
+        dockerfile: Dockerfile.earthquakes
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: swift run puzzola
 
 volumes:
   db-data:

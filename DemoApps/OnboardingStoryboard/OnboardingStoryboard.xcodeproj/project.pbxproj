@@ -1,0 +1,244 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B10000000000000000000001 /* OnboardingStoryboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* OnboardingStoryboardApp.swift */; };
+		B10000000000000000000003 /* OnboardingUIKitApp in Frameworks */ = {isa = PBXBuildFile; productRef = B10000000000000000000004 /* OnboardingUIKitApp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B10000000000000000000002 /* OnboardingStoryboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStoryboardApp.swift; sourceTree = "<group>"; };
+		B10000000000000000000007 /* OnboardingStoryboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnboardingStoryboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B10000000000000000000008 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000003 /* OnboardingUIKitApp in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B10000000000000000000009 = {
+			isa = PBXGroup;
+			children = (
+				B1000000000000000000000A /* OnboardingStoryboardApp */,
+				B1000000000000000000000B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B1000000000000000000000A /* OnboardingStoryboardApp */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000002 /* OnboardingStoryboardApp.swift */,
+			);
+			path = OnboardingStoryboardApp;
+			sourceTree = "<group>";
+		};
+		B1000000000000000000000B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000007 /* OnboardingStoryboard.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B1000000000000000000000D /* OnboardingStoryboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1000000000000000000000E /* Build configuration list for PBXNativeTarget "OnboardingStoryboard" */;
+			buildPhases = (
+				B10000000000000000000010 /* Generate and Compile Storyboard */,
+				B1000000000000000000000F /* Sources */,
+				B10000000000000000000008 /* Frameworks */,
+				B10000000000000000000011 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnboardingStoryboard;
+			packageProductDependencies = (
+				B10000000000000000000004 /* OnboardingUIKitApp */,
+			);
+			productName = OnboardingStoryboard;
+			productReference = B10000000000000000000007 /* OnboardingStoryboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B10000000000000000000012 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+			};
+			buildConfigurationList = B10000000000000000000013 /* Build configuration list for PBXProject "OnboardingStoryboard" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B10000000000000000000009;
+			packageReferences = (
+				B10000000000000000000014 /* XCLocalSwiftPackageReference "../../DemoPackage" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B1000000000000000000000B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B1000000000000000000000D /* OnboardingStoryboard */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B10000000000000000000011 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B10000000000000000000010 /* Generate and Compile Storyboard */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../../DemoPackage/Sources/OnboardingShared/Onboarding.swift",
+			);
+			name = "Generate and Compile Storyboard";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/StateBlasterPresentation/OnboardingUIKitApp.generated.storyboard",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/OnboardingUIKitApp.generated.storyboardc",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nROOT=\"$SRCROOT/../..\"\nINPUT=\"$ROOT/DemoPackage/Sources/OnboardingShared/Onboarding.swift\"\nGENERATED_DIR=\"$DERIVED_FILE_DIR/StateBlasterPresentation\"\nSTORYBOARD=\"$GENERATED_DIR/OnboardingUIKitApp.generated.storyboard\"\nSWIFT_OUT=\"$GENERATED_DIR/OnboardingUIKitApp.generated.swift\"\nCOMPILED=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/OnboardingUIKitApp.generated.storyboardc\"\nmkdir -p \"$GENERATED_DIR\" \"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nenv -u SDKROOT /usr/bin/xcrun --sdk macosx swift run --package-path \"$ROOT\" StateBlasterStoryboardGenerator OnboardingUIKitApp \"$SWIFT_OUT\" \"$STORYBOARD\" \"$INPUT\"\nrm -rf \"$COMPILED\"\nxcrun ibtool --errors --warnings --notices --compile \"$COMPILED\" \"$STORYBOARD\" --minimum-deployment-target \"$IPHONEOS_DEPLOYMENT_TARGET\" --target-device iphone --target-device ipad --module OnboardingUIKitApp\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B1000000000000000000000F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000001 /* OnboardingStoryboardApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B10000000000000000000015 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B10000000000000000000016 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		B10000000000000000000017 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnboardingStoryboardApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stateblaster.StateBlaster.OnboardingStoryboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B10000000000000000000018 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnboardingStoryboardApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stateblaster.StateBlaster.OnboardingStoryboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B1000000000000000000000E /* Build configuration list for PBXNativeTarget "OnboardingStoryboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B10000000000000000000017 /* Debug */,
+				B10000000000000000000018 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B10000000000000000000013 /* Build configuration list for PBXProject "OnboardingStoryboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B10000000000000000000015 /* Debug */,
+				B10000000000000000000016 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		B10000000000000000000014 /* XCLocalSwiftPackageReference "../../DemoPackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../DemoPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B10000000000000000000004 /* OnboardingUIKitApp */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B10000000000000000000014 /* XCLocalSwiftPackageReference "../../DemoPackage" */;
+			productName = OnboardingUIKitApp;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = B10000000000000000000012 /* Project object */;
+}

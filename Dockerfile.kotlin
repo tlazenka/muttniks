@@ -1,0 +1,13 @@
+FROM gradle:9.7.1-jdk17
+
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+
+COPY build.gradle.kts settings.gradle.kts gradlew ./
+COPY gradle ./gradle
+
+COPY . .
+
+RUN ./gradlew build
+
+CMD ["./gradlew", "allTest"]
