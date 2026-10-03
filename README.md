@@ -1,152 +1,89 @@
-# Cheat sheet
+# Puzzola/Muttniks/StateBlaster
 
-If it's not installed, you'll need to install [Docker](https://www.docker.com/get-started) first. Then, run each of these commands in separate Terminal windows.
+## Puzzola: a direct manipulation faceted JSON explorer built on SQLite
 
-First, we need to start our blockchain:
+First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
-- `docker-compose up ganache`
+`docker compose build -v`
 
-When it's ready, you'll see `Listening on 0.0.0.0:7545` a few lines down in the Terminal output.
+Next, start up the containers with...
 
-Then, we need to deploy our smart contract:
+Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger). Unless you'd like a spare `sbt` image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
 
-- `docker-compose run --rm truffle truffle migrate --network development`
+`docker compose down --volumes --rmi all --remove-orphans`
 
-When it's done, you'll see:
+_Then_, the choice is yours, sort of:
 
-```
-Saving successful migration to network...
-  ... 0x36b7b157b468782e6eec6ab0b093dbbd5301c8cb5622fde8dff4c5b5c9e9a707
-Saving artifacts...
-```
+### (macOS >= 26) && (Xcode >= 27)
 
-in the output, and it will quit.
+`cd Demos && brew install mint && mint run xcodegen && open Earthquakes.xcodeproj`
 
-Next, let's start up our main server
+### Linux || macOS
 
-- `docker-compose up app`
+`docker compose run --rm earthquakes "$.properties.mag >= 5"`
 
-When it's ready, you'll see `[info] p.c.s.AkkaHttpServer - Listening for HTTP on /0.0.0.0:9000` in the output.
+### Screenshots
 
-Visit http://localhost:9000 to see the server-side rendered page
+| Scrub | Filter | Scrubap |
+| --- | --- | --- |
+| <img width="1206" height="2622" alt="Puzzola-1" src="https://github.com/user-attachments/assets/144f00a7-0f53-4c18-87e4-104b2cce862e" /> | <img width="1206" height="2622" alt="Puzzola-2" src="https://github.com/user-attachments/assets/4584aabb-0b60-4f52-9eb7-f757b2e8cb59" /> | <img width="1206" height="2622" alt="Puzzola-3" src="https://github.com/user-attachments/assets/b936a281-f299-483e-96ec-4abc3efd0400" /> |
 
-In addition, you can browse the "single-page application", which uses caching. The caching bit is started with:
+_Note: this is not Linux_
 
-- `docker-compose up jobs`
+## Muttniks: an open source dapp to show you how we built Astro Ledger 
 
-When that is ready, you'll see `*** Start update cache` in the output.
+[Muttniks](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially had SSR support](https://github.com/tlazenka/muttniks/tree/v0.1/app/views) too via Twirl). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
 
-To then view the single-page application, run:
-
-- `docker-compose up react`
-
-When that is ready, you'll see `You can now view muttniks in the browser.` in the output.
-
-Visit http://localhost:3000 to see this version
-
-# Interactions
-
-In most browsers, you can navigate to http://localhost:9000 to interact with the contract as Account #1.
-
-We also provide a Firefox Docker image with [MetaMask](https://metamask.io) available. To access it, in a Terminal window run:
+Launch the WIP through:
 
 ```
-docker-compose stop app; docker-compose -f docker-compose.yml -f docker-compose.firefox.yml up app
+docker compose up app -d && \
+  until code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:9000/health); [ "$code" = "200" ]; do echo "Waiting for Play\!... status: $code"; sleep 3; done && \
+  open -a Safari http://localhost:9000
 ```
 
-And then, in a new window:
+This waits until an OK response from the Play health endpoint and then opens home through Safari. Please note you'll need a browser with wallet support beyond this.
 
-`docker-compose up firefox`
+[Blast to the past](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
 
-It's started once you see:
+## StateBlaster: ???
 
-`The VNC desktop is:`
+I'm simply going to post the `swift`/`gradle` commands here, because there's a good chance we're just going to try to get generative AI to traipse through the code anyway to try to summarize what's going on here, and then merge in the output. In the meantime:
 
-Next, open http://localhost:5800 in a web browser to access it, or go to vnc://localhost:5900
+### Swift/macOS/iOS
 
-The password is `password`
+`swift test`
 
-In the Firefox address bar that appears, go to:
+`swift format . --recursive --in-place`
 
-`about:debugging`
+`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`
+`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`
+`open ./DemoApps/OnboardingStoryboard/OnboardingStoryboard.xcodeproj/`
 
-Click "Load Temporary Add-on..."
+### Kotlin/Ktor/Android
 
-Navigate to "Other Locations -> Computer -> var -> tmp -> metamask", select `manifest.json`, and click Open.
+`rm -rf ~/.m2/repository/com/stateblaster/`
 
-In the MetaMask tab that pops up, click "Continue", then "Import with seed phrase". Type into the Wallet Seed box the seed words from ganache. These are by default:
-
-`candy maple cake sugar pudding cream honey rich smooth crumble sweet treat`
-
-Enter a New Password, then click Import. Accept a few terms and notices, then in the main window change from "Main Ethereum Network" to "Custom RPC"
-
-Type in http://ganache:7545 as "New RPC URL", and click Save
-
-Open a new tab and navigate to http://app:9000 in a new address bar
-
-
-## API
-
-If you don't want to use MetaMask, you can pass up data via URLs and parameters (these use your private key as a URL parameter, so are not recommended in production).
-
-- To adopt a pet (in this case pet ID 3 from private key `8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5`)
+`ls -al ~/.m2/repository/com/stateblaster`
 
 ```
-curl --request POST \
-  --url 'http://localhost:9000/api/adopt?petId=3&privateKey=c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
+./gradlew \
+  :witness-annotations:publishToMavenLocal \
+  :witness-runtime:publishToMavenLocal \
+  :witness-processor:publishToMavenLocal
 ```
-
-- To rename a pet (in this case for pet 3 from the above private key and with name "Astro"):
-
+  
+`ls -al ~/.m2/repository/com/stateblaster`
+  
 ```
-curl --request POST \
-  --url 'http://localhost:9000/api/assignName?petId=3&privateKey=c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3&name=Astro'
-
+cd examples/ktor-server && \
+  gradle clean run --no-daemon \
+      --refresh-dependencies
 ```
-
-You can visit other URLs to see cached data (note that it may take a minute or so for these caches to be updated). These include:
-
-- Pets adopted by an adopter's address. For example this is for the first account: http://localhost:9000/api/petsByAdopter?adopter=0x627306090abab3a6e1400e9345bc60c78a8bef57
-
-- Cached pet names. This is for the third pet ID: http://localhost:5000/petName/3
-
-
-# Development
-
-## Testing
-
-You can run the Solidity tests with:
-
-- `docker-compose run --rm truffle truffle test`
-
-For the following tests, be sure to have run:
-
-- `docker-compose up ganache`
-
-and
-
-- `docker-compose run --rm truffle truffle migrate --network development`
-
-as a prerequisite.
-
-You can run the Play! tests with:
-
-- `docker-compose run --rm app sbt testWithMigrate`
-
-You can run the Clojure tests with:
-
-- `docker-compose run --rm jobs lein test`
-
-You can run the React tests with:
-
-- `docker-compose run --rm react npm test`
-
-## Other
-
-When developing in React, you can use Flow to type check:
-
-- `docker-compose run --rm react flow-watch`
-
-We use `web3j` to easily talk to the contracts in Scala. You can generate this code with:
-
-- `docker-compose run --rm web3j /web3j-3.3.1/bin/web3j truffle generate /code/sol/build/contracts/Adoption.json -o /code/app -p contracts`
+  
+```
+cd examples/android  && \
+  gradle clean assembleDebug \
+    --refresh-dependencies \
+    --no-daemon
+```

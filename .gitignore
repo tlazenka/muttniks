@@ -1,3 +1,68 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+# Package.pins
+# Package.resolved
+# *.xcodeproj
+#
+# Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
+# hence it is not needed unless you have added a package configuration file to your project
+# .swiftpm
+
+.build/
+
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
+# Pods/
+#
+# Add this line if you want to avoid checking in source code from the Xcode workspace
+# *.xcworkspace
+
+# Carthage
+#
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+# Carthage/Checkouts
+
+Carthage/Build/
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo.
+# Instead, use fastlane to re-generate the screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+Demos/Earthquakes.xcodeproj
+Demos/Info.plist
+
 /.idea
 
 modules/play/logs/
@@ -38,3 +103,87 @@ server.pid
 /dist/
 
 /build
+out
+cache
+
+.DS_Store
+.idea/shelf
+/confluence/target
+/dependencies/repo
+/android.tests.dependencies
+/dependencies/android.tests.dependencies
+/dist
+/local
+/gh-pages
+/ideaSDK
+/clionSDK
+/android-studio/sdk
+out/
+/tmp
+/intellij
+workspace.xml
+*.versionsBackup
+/idea/testData/debugger/tinyApp/classes*
+/jps-plugin/testData/kannotator
+/js/js.translator/testData/out/
+/js/js.translator/testData/out-min/
+/js/js.translator/testData/out-pir/
+.gradle/
+build/
+!**/src/**/build
+!**/test/**/build
+!**/tests-gen/**/build
+!/third-party/java8-annotations/org/chromium/build
+*.iml
+!**/testData/**/*.iml
+.idea/artifacts
+.idea/remote-targets.xml
+.idea/libraries/Gradle*.xml
+.idea/libraries/Maven*.xml
+.idea/modules
+.idea/runConfigurations/JPS_*.xml
+.idea/runConfigurations/_JPS_*.xml
+.idea/runConfigurations/_FP_*.xml
+.idea/runConfigurations/_MT_*.xml
+.idea/libraries
+.idea/modules.xml
+.idea/gradle.xml
+.idea/compiler.xml
+.idea/inspectionProfiles/*
+!.idea/inspectionProfiles/idea_default.xml
+.idea/.name
+.idea/jarRepositories.xml
+.idea/csv-plugin.xml
+.idea/libraries-with-intellij-classes.xml
+.idea/misc.xml
+.idea/protoeditor.xml
+.idea/uiDesigner.xml
+.idea/copilot.data.migration.*.xml
+.idea/junie.xml
+node_modules/
+.rpt2_cache/
+local.properties
+buildSrcTmp/
+distTmp/
+outTmp/
+/test.output
+/kotlin-native/dist
+kotlin-ide/
+.kotlin/
+.teamcity/
+.npmrc
+/.idea/AndroidProjectSystem.xml
+**/.junie/memory/
+**/.junie/plans/
+.output
+.claude/local.md
+.claude/CLAUDE.md
+.claude/settings.local.json
+**/xcuserdata
+.test-federation.*
+
+.idea
+.cpcache
+.bsp
+__pycache__
+sol/broadcast

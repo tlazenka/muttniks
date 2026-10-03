@@ -1,0 +1,42 @@
+version: '2'
+services:
+  test-swift:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: swift test
+  format-swift:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: swift format lint --recursive .
+  build-kotlin:
+    build:
+        context: .
+        dockerfile: Dockerfile.kotlin
+    volumes:
+      - .:/app
+    command: ./gradlew build 
+    volumes_from:
+      - caches
+  format-kotlin:
+    build:
+        context: .
+        dockerfile: Dockerfile.ktfmt
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: java -jar /usr/local/bin/kfmt.jar --kotlinlang-style .
+  caches:
+    image: centos:7
+    volumes:
+      - ~/.gradle:/home/gradle/.gradle:rw
+      - ~/.konan:/root/.konan:rw
+
+

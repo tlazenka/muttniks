@@ -1,134 +1,170 @@
-version: '2'
-services:
-  app:
-    image: ysihaoy/scala-play:2.12.3-2.6.2-sbt-0.13.15
-    ports:
-     - 9000:9000
-     - 5005:5005
-    working_dir: /app
-    links:
-     - db
-     - ganache
-    volumes:
-     - .:/app
-    volumes_from:
-     - sbt
-    env_file:
-     - ./conf/dev.env
-    stdin_open: true
-    command: sbt -Dsun.net.http.allowRestrictedHeaders=true -jvm-debug 5005 runWithMigrate
+name: muttniks
 
+services:
   db:
-    image: postgres:10
-    volumes:
-      - /var/lib/postgresql
-    expose:
-      - "5432"
-    ports:
-      - 5432:5432
+    image: postgres:18-alpine
     environment:
-      - POSTGRES_DB=muttniks
-      - POSTGRES_USER=muttniks
-      - POSTGRES_PASSWORD=
-      
-  jobs:
+      POSTGRES_DB: muttniks
+      POSTGRES_USER: muttniks
+      POSTGRES_PASSWORD: muttniks
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U muttniks -d muttniks"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - db-data:/var/lib/postgresql
+
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:v1.8.3
+    entrypoint: ["anvil"]
+    command: ["--host", "0.0.0.0", "--chain-id", "31337", "--block-time", "1"]
+    ports:
+      - "8545:8545"
+    healthcheck:
+      test: ["CMD", "cast", "block-number", "--rpc-url", "http://127.0.0.1:8545"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  contracts:
     build:
       context: .
-      dockerfile: Dockerfile.lein
+      dockerfile: Dockerfile.contracts
+    image: muttniks-contracts
+    working_dir: /workspace/sol
+    entrypoint: ["forge"]
+    command:
+      - script
+      - script/Deploy.s.sol:DeployAdoption
+      - --rpc-url
+      - http://anvil:8545
+      - --private-key
+      - "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+      - --broadcast
+    environment:
+      FOUNDRY_REMAPPINGS: "forge-std/=/opt/forge-std/src/"
+    volumes:
+      - ./sol:/workspace/sol
+    depends_on:
+      anvil:
+        condition: service_healthy
+    restart: "no"
+
+  contracts-test:
+    extends:
+      service: contracts
+    profiles: ["test"]
+    command: ["test"]
+    depends_on: !reset {}
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    environment:
+      MUTTNIKS_JDBC_URL: jdbc:postgresql://db:5432/muttniks
+      MUTTNIKS_DB_HOST: db
+      MUTTNIKS_DB_PORT: "5432"
+      MUTTNIKS_DB_NAME: muttniks
+      MUTTNIKS_DB_USER: muttniks
+      MUTTNIKS_DB_PASSWORD: muttniks
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: muttniks
+      DATABASE_USER: muttniks
+      DATABASE_PASSWORD: muttniks
+      ADOPTION_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      CHAIN_ID: "31337"
+      ETH_RPC_URL: http://anvil:8545
+      CONFIRMATIONS: "0"
+      START_BLOCK: "0"
+      POLL_INTERVAL: "1s"
+      MUTTNIKS_MAVEN_REPO: /workspace/maven-repo
+      PLAY_HTTP_SECRET_KEY: ${PLAY_HTTP_SECRET_KEY:-2f6b7d3c9a4e8f1b5c0d7a2e6f9b3c8d1a5e7f0c4b8d2a6e9c3f7b1d5a8e0c4f}
     ports:
-      - 5000:5000
+      - "9000:9000"
+    volumes:
+      - ./app:/workspace/app
+      - app-sbt-cache:/root/.sbt
+      - app-coursier-cache:/root/.cache/coursier
+    depends_on:
+      db:
+        condition: service_healthy
+      anvil:
+        condition: service_healthy
+      contracts:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9000/health >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+      start_period: 30s
+
+  likes-test:
+    profiles: ["test"]
+    restart: "no"
+    image: gradle:8.14.3-jdk21
+    working_dir: /workspace/likes
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "gradle --no-daemon test"
+    volumes:
+      - ./likes:/workspace/likes
+      - likes-gradle-cache:/home/gradle/.gradle
+
+  integration-tests:
+    profiles: ["test"]
+    restart: "no"
+    build:
+      context: .
+      dockerfile: Dockerfile.integration-tests
+    working_dir: /workspace/integration_tests
+    volumes:
+      - ./integration_tests:/workspace/integration_tests
+    environment:
+      API_BASE: http://app:9000
+      RPC_URL: http://anvil:8545
+      ADOPTION_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    depends_on:
+      anvil:
+        condition: service_healthy
+      contracts:
+        condition: service_completed_successfully
+      app:
+        condition: service_healthy
+
+  tests:
+    build:
+        context: .
+        dockerfile: Dockerfile
     volumes:
       - .:/app
-      - ./app/contracts/Adoption.json:/app/jobs/src/java/contracts/Adoption.json
-    volumes_from:
-     - lein
-    links:
-      - redis
-      - app
-      - ganache
-    env_file:
-      - ./jobs/dev.env
-    command: lein run
-
-  redis:
-    image: redis:3
-    expose:
-      - "6379"
-    ports:
-      - 6379:6379
-
-  sbt:
-    image: centos:7
+    working_dir: /app
+    command: swift test
+  format:
+    build:
+        context: .
+        dockerfile: Dockerfile
     volumes:
-     - ~/.ivy2:/root/.ivy2:rw
-     - ~/.ivy2:/home/docker/.ivy2:rw
-     - ~/.sbt:/root/.sbt:rw
-     - ~/.sbt:/home/docker/.sbt:rw
-     
-  lein:
-    image: centos:7
+      - .:/app
+    working_dir: /app
+    command: swift format lint --recursive .
+
+  earthquakes:
+    build:
+        context: .
+        dockerfile: Dockerfile.earthquakes
     volumes:
-      - ~/.m2:/root/.m2:rw
-     
-  truffle:
-      build:
-          context: .
-          dockerfile: Dockerfile.truffle
-      volumes:
-        - .:/app
-        - /app/sol/node_modules
-        - ./truffle.js.docker:/app/sol/truffle.js
-      links:
-        - ganache
-      tty: true
+      - .:/app
+    working_dir: /app
+    command: swift run puzzola
 
-  ganache:
-      build:
-          context: .
-          dockerfile: Dockerfile.ganache
-      expose:
-        - "7545"
-      ports:
-        - "7545:7545"
-      command: ganache-cli --hostname=0.0.0.0 --port 7545 --deterministic --mnemonic "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
-
-  react:
-      build:
-          context: .
-          dockerfile: Dockerfile.react
-      ports:
-        - 3000:3000
-      links:
-        - app
-        - jobs
-        - ganache
-      volumes:
-        - .:/app
-        - /app/ui/node_modules
-        - ./sol/build/contracts/Adoption.json:/app/ui/src/build/contracts/Adoption.json
-        - ./react.env:/app/ui/.env
-      environment:
-        - NODE_ENV=development
-        
-  web3j:
-      build:
-          context: .
-          dockerfile: Dockerfile.web3j
-      volumes:
-        - .:/code
-          
-  firefox:
-      build:
-          context: .
-          dockerfile: Dockerfile.firefox
-      shm_size: '2gb'
-      ports:
-        - "5800:5800"
-        - "5900:5900"
-      environment:
-        - VNC_PASSWORD=password
-      links:
-        - app
-        - jobs
-        - ganache
-        - react
+volumes:
+  db-data:
+  app-sbt-cache:
+  app-coursier-cache:
+  likes-gradle-cache:
