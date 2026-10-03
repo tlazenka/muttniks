@@ -33,46 +33,46 @@ public enum JSONPathParser {
 
     static let member =
         const(".")
-            .flatMap { _ in identifier }
-            .map(JSONPathComponent.member)
+        .flatMap { _ in identifier }
+        .map(JSONPathComponent.member)
 
     static let index =
         const("[")
-            .flatMap { _ in digits }
-            .flatMap { digits in
-                const("]").map { _ in
-                    JSONPathComponent.index(Int(digits)!)
-                }
+        .flatMap { _ in digits }
+        .flatMap { digits in
+            const("]").map { _ in
+                JSONPathComponent.index(Int(digits)!)
             }
+        }
 
     static let fromEnd =
         const("[")
-            .flatMap { _ in const("#") }
-            .flatMap { _ in const("-") }
-            .flatMap { _ in digits }
-            .flatMap { digits in
-                const("]").map { _ in
-                    JSONPathComponent.fromEnd(Int(digits)!)
-                }
+        .flatMap { _ in const("#") }
+        .flatMap { _ in const("-") }
+        .flatMap { _ in digits }
+        .flatMap { digits in
+            const("]").map { _ in
+                JSONPathComponent.fromEnd(Int(digits)!)
             }
+        }
 
     static let append =
         const("[")
-            .flatMap { _ in const("#") }
-            .flatMap { _ in const("]") }
-            .map { _ in JSONPathComponent.append }
+        .flatMap { _ in const("#") }
+        .flatMap { _ in const("]") }
+        .map { _ in JSONPathComponent.append }
 
     static let component = oneOf([
         member,
         fromEnd,
         append,
-        index
+        index,
     ])
 
     public static let path =
         const("$")
-            .flatMap { _ in many(component) }
-            .map(ParsedJSONPath.init)
+        .flatMap { _ in many(component) }
+        .map(ParsedJSONPath.init)
 
     public static func parse(_ source: String) -> Result<ParsedJSONPath, ParseError> {
         path.parse(CharStream(source)).flatMap { value, rest in

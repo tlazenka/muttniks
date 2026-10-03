@@ -37,13 +37,15 @@ import Testing
 
 @Test func parsesAllSupportedJSONPathComponentKinds() throws {
     let parsed = try JSONPathParser.parse("$.items[2][#-1][#]._value9").get()
-    #expect(parsed.components == [
-        .member("items"),
-        .index(2),
-        .fromEnd(1),
-        .append,
-        .member("_value9")
-    ])
+    #expect(
+        parsed.components == [
+            .member("items"),
+            .index(2),
+            .fromEnd(1),
+            .append,
+            .member("_value9"),
+        ]
+    )
 }
 
 @Test func JSONPathMemberAllowsNumbersAfterDot() throws {

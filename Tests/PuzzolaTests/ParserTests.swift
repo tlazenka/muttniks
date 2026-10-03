@@ -1,5 +1,5 @@
-import Testing
 import PuzzolaParsers
+import Testing
 
 @Test func parseInputTracksCharactersAndOffsets() {
     let input = ParseInput("éx")

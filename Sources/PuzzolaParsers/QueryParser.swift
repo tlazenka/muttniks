@@ -6,7 +6,6 @@
 //
 import Do
 
-
 public enum ComparisonOperator: String, Equatable, Sendable {
     case equal = "="
     case notEqual = "!="
@@ -57,7 +56,7 @@ public enum QueryParser {
         const("!=").map { _ in ComparisonOperator.notEqual },
         const("=").map { _ in ComparisonOperator.equal },
         const(">").map { _ in ComparisonOperator.greaterThan },
-        const("<").map { _ in ComparisonOperator.lessThan }
+        const("<").map { _ in ComparisonOperator.lessThan },
     ])
 
     static let number = Parser<Double> { input in
@@ -113,7 +112,7 @@ public enum QueryParser {
         const("true").map { _ in QueryValue.bool(true) },
         const("false").map { _ in QueryValue.bool(false) },
         const("null").map { _ in QueryValue.null },
-        number.map(QueryValue.number)
+        number.map(QueryValue.number),
     ])
 
     @Do

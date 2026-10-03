@@ -140,7 +140,6 @@ public func many<T: Sendable>(_ parser: Parser<T>) -> Parser<[T]> {
     }
 }
 
-
 public func const(_ expected: String) -> Parser<String> {
     Parser { input in
         var rest = input
@@ -171,7 +170,6 @@ public func token<T: Sendable>(_ parser: Parser<T>) -> Parser<T> {
         }
     }
 }
-
 
 public func satisfy(
     _ predicate: @escaping @Sendable (Character) -> Bool,
@@ -204,39 +202,39 @@ public func sepby<T: Sendable, S: Sendable>(
         parser.flatMap { first in
             many(separator.flatMap { _ in parser }).map { [first] + $0 }
         },
-        Parser { input in .success(([], input)) }
+        Parser { input in .success(([], input)) },
     ])
 }
 
-infix operator |>: AdditionPrecedence
+infix operator |> : AdditionPrecedence
 public func |> <A: Sendable, B: Sendable>(
     parser: Parser<A>,
     transform: @escaping @Sendable (A) -> B
 ) -> Parser<B> { parser.map(transform) }
 
-infix operator |: AdditionPrecedence
+infix operator | : AdditionPrecedence
 public func | <T: Sendable>(lhs: Parser<T>, rhs: Parser<T>) -> Parser<T> {
     oneOf([lhs, rhs])
 }
 
-infix operator ~>: MultiplicationPrecedence
+infix operator ~> : MultiplicationPrecedence
 public func ~> <A: Sendable, B: Sendable>(lhs: Parser<A>, rhs: Parser<B>) -> Parser<A> {
     lhs.flatMap { value in rhs.map { _ in value } }
 }
 
-infix operator >~: MultiplicationPrecedence
+infix operator >~ : MultiplicationPrecedence
 public func >~ <A: Sendable, B: Sendable>(lhs: Parser<A>, rhs: Parser<B>) -> Parser<B> {
     lhs.flatMap { _ in rhs }
 }
 
-infix operator ~>~: MultiplicationPrecedence
+infix operator ~>~ : MultiplicationPrecedence
 public func ~>~ <A: Sendable, B: Sendable>(lhs: Parser<A>, rhs: Parser<B>) -> Parser<(A, B)> {
     lhs.flatMap { a in rhs.map { b in (a, b) } }
 }
 
 protocol ParserProtocol {
     associatedtype Output
-    
+
     static func parse(_ source: String) -> Result<Output, ParseError>
 }
 
@@ -257,4 +255,3 @@ public func prefix(
     while predicate: @escaping @Sendable (Character) -> Bool,
     expected: String
 ) -> Parser<String> { regex(while: predicate, expected: expected) }
-

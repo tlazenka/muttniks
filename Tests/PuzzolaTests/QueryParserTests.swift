@@ -70,7 +70,7 @@ private func comparison(
 @Test func parsesEveryComparisonOperator() throws {
     let cases: [(String, ComparisonOperator)] = [
         ("=", .equal), ("!=", .notEqual), (">", .greaterThan),
-        (">=", .greaterThanOrEqual), ("<", .lessThan), ("<=", .lessThanOrEqual)
+        (">=", .greaterThanOrEqual), ("<", .lessThan), ("<=", .lessThanOrEqual),
     ]
     for (source, operation) in cases {
         #expect(try QueryParser.parse("$.x \(source) 1").get() == comparison("$.x", operation, .number(1)))
@@ -91,8 +91,10 @@ private func comparison(
 }
 
 @Test func queryPathTextPreservesOriginalPathSpelling() throws {
-    #expect(try QueryParser.parse("$.items[#-2].type = \"Point\"").get() ==
-        comparison("$.items[#-2].type", .equal, .string("Point")))
+    #expect(
+        try QueryParser.parse("$.items[#-2].type = \"Point\"").get()
+            == comparison("$.items[#-2].type", .equal, .string("Point"))
+    )
 }
 
 @Test func conjunctionAssociatesToTheLeft() throws {
@@ -113,10 +115,13 @@ private func comparison(
 
 @Test func andHasHigherPrecedenceThanOrOnBothSides() throws {
     let parsed = try QueryParser.parse("$.a = 1 && $.b = 2 || $.c = 3 && $.d = 4").get()
-    #expect(parsed == .or(
-        .and(comparison("$.a", .equal, .number(1)), comparison("$.b", .equal, .number(2))),
-        .and(comparison("$.c", .equal, .number(3)), comparison("$.d", .equal, .number(4)))
-    ))
+    #expect(
+        parsed
+            == .or(
+                .and(comparison("$.a", .equal, .number(1)), comparison("$.b", .equal, .number(2))),
+                .and(comparison("$.c", .equal, .number(3)), comparison("$.d", .equal, .number(4)))
+            )
+    )
 }
 
 @Test func queryRejectsTrailingJunkAtUnparsedOffset() {
