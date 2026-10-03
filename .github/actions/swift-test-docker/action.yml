@@ -1,0 +1,4 @@
+name: 'swift test'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
