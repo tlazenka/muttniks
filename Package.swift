@@ -25,7 +25,7 @@ let package = Package(
             name: "puzzola",
             targets: ["PuzzolaCLI"]
         ),
-                .library(
+        .library(
             name: "StateBlaster",
             targets: ["StateBlaster"]
         ),
@@ -118,8 +118,8 @@ let package = Package(
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
         ),
-        
-                .target(
+
+        .target(
             name: "StateBlasterPresentationParser"
         ),
         .executableTarget(
