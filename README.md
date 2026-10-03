@@ -1,130 +1,83 @@
-# Muttniks: An open source dapp to show you how we built Astro Ledger
+# Puzzola/Muttniks/StateBlaster
 
-Launching a dapp may not be as hard as launching a rocket...but it’s no moonwalk, either. A dapp, portmanteau of "decentralized app," is any app that runs on decentralized infrastructure, like on Ethereum. For your coding pleasure, our team is happy to present Muttniks, a friendly Ethereum space doggo "kernel" (or kennel) that you can build from the comfort of your spacecraft. Muttniks is an open source sample dapp, built to guide you through our exciting journey with [Astro Ledger](https://www.astroledger.org). Like the real stars and planets featured on astroledger.org, you can securely adopt, name, and trade Ethereum space doggos with Muttniks (and then donate your testnet ETH to build more Laika monuments).
+## Puzzola
 
-[_Read More_](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
+First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
-# Cheat sheet
+`docker compose build -v`
 
-If it's not installed, you'll need to install [Docker](https://www.docker.com/get-started) first. Then, run each of these commands in separate Terminal windows.
+Next, start up the containers with...
 
-First, we need to start our blockchain:
+Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](). Unless you need a spare sbt image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
 
-- `docker-compose up ganache`
+`docker compose down --volumes --rmi all --remove-orphans`
 
-When it's ready, you'll see `Listening on 0.0.0.0:7545` a few lines down in the Terminal output.
+_Then_, the choice is (sort of) yours:
 
-Then, we need to deploy our smart contract:
+## (macOS >= 26) && (Xcode >= 27)
 
-- `docker-compose run --rm truffle truffle migrate --network development`
+`cd Demos && mint run xcodegen && open Earthquakes.xcodeproj`
 
-When it's done, you'll see:
+_or_
 
-```
-Saving successful migration to network...
-  ... 0x36b7b157b468782e6eec6ab0b093dbbd5301c8cb5622fde8dff4c5b5c9e9a707
-Saving artifacts...
-```
+## Linux || macOS
 
-in the output, and it will quit.
+`docker compose run --rm earthquakes "$.properties.mag >= 5"`
 
-Next, let's start up our main server
+## Muttniks
 
-- `docker-compose up app`
+[`Muttniks`](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially also had SSR support via Twirl](https://github.com/tlazenka/muttniks/tree/v0.1/app/views)). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
 
-When it's ready, you'll see `[info] p.c.s.AkkaHttpServer - Listening for HTTP on /0.0.0.0:9000` in the output.
-
-To start the card name cache, run:
-
-- `docker-compose up jobs`
-
-When that is ready, you'll see `*** Start update cache` in the output.
-
-To then view the single-page application, run:
-
-- `docker-compose up react`
-
-When that is ready, you'll see `You can now view muttniks in the browser.` in the output.
-
-Visit http://localhost:3000 to see it
-
-# Interactions
-
-In Firefox and Chrome, you can use [MetaMask](https://metamask.io) alongside the http://localhost:3000 webpage to interact with the contract.
-
-If you don't want to use MetaMask, you can pass up data via URLs and parameters (these use your private key as a URL parameter, so are not recommended in production).
-
-- To adopt a pet (in this case pet ID 3 from private key `8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5`)
+Launch the WIP through:
 
 ```
-curl --request POST \
-  --url 'http://localhost:9000/api/adopt?petId=3&privateKey=c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
+docker compose up app -d && \
+  until code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:9000/health); [ "$code" = "200" ]; do echo "Waiting for Play\!... status: $code"; sleep 3; done && \
+  open -a Safari http://localhost:9000
 ```
 
-- To rename a pet (in this case for pet 3 from the above private key and with name "Astro"):
+This waits until an OK response from the Play health endpoint and then opens home through Safari. Please note you'll need a browser with wallet support beyond this.
+
+[Blast to the past](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
+
+## StateBlaster
+
+I'm simply going to post the `swift`/`gradle` commands here, because there's a good chance we're just going to try to get Generative AI to traipse through the code to try to summarize what's going on here, and then merge in what it outputs. In the meantime:
+
+## Swift/macOS/iOS
+
+`swift test`
+
+`swift format . --recursive --in-place`
+
+`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`
+`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`
+`open ./DemoApps/OnboardingStoryboard/OnboardingStoryboard.xcodeproj/`
+
+## Kotlin/Ktor/Android
+
+`rm -rf ~/.m2/repository/com/stateblaster/`
+
+`ls -al ~/.m2/repository/com/stateblaster`
 
 ```
-curl --request POST \
-  --url 'http://localhost:9000/api/assignName?petId=3&privateKey=c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3&name=Astro'
-
+./gradlew \
+  :witness-annotations:publishToMavenLocal \
+  :witness-runtime:publishToMavenLocal \
+  :witness-processor:publishToMavenLocal
 ```
-
-You can visit other URLs to see cached data (note that it may take a minute or so for these caches to be updated). These include:
-
-- Pets adopted by an adopter's address. For example this is for the first account: http://localhost:9000/api/petsByAdopter?adopter=0x627306090abab3a6e1400e9345bc60c78a8bef57
-
-- Cached pet names. This is for the third pet ID: http://localhost:5000/petName/3
-
-
-# Development
-
-## Testing
-
-You can run the Solidity tests with:
-
-- `docker-compose run --rm truffle truffle test`
-
-For the following tests, be sure to have run:
-
-- `docker-compose up ganache`
-
-and
-
-- `docker-compose run --rm truffle truffle migrate --network development`
-
-as a prerequisite.
-
-You can run the Play! tests with:
-
-- `docker-compose run --rm app sbt testWithMigrate`
-
-You can run the Clojure tests with:
-
-- `docker-compose run --rm jobs lein test`
-
-You can run the React tests with:
-
-- `docker-compose run --rm react npm test`
-
-## Integration tests
-
-To run the integration tests, you'll need to set up the `ganache`, `truffle`, `app`, and `jobs` services as described in the Cheat sheet.
-
-To then run Swift integration tests:
-
-`docker-compose run --rm client`
-
-
-## Other
-
-When developing in React, you can use Flow to type check:
-
-- `docker-compose run --rm react flow-watch`
-
-We use `web3j` to easily talk to the contracts in Scala. You can generate this code with:
-
-- `docker-compose run --rm web3j /web3j-3.3.1/bin/web3j truffle generate /code/sol/build/contracts/Adoption.json -o /code/app -p contracts`
-
-# Acknowledgements
-
-See [LICENSE](LICENSE).
+  
+`ls -al ~/.m2/repository/com/stateblaster`
+  
+```
+cd examples/ktor-server && \
+  gradle clean run --no-daemon \
+      --refresh-dependencies
+```
+  
+```
+cd examples/android  && \
+  gradle clean assembleDebug \
+    --refresh-dependencies \
+    --no-daemon
+```
