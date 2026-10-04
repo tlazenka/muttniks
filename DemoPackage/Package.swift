@@ -11,7 +11,6 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(name: "OnboardingShared", targets: ["OnboardingShared"]),
         .library(name: "OnboardingSwiftUI", targets: ["OnboardingSwiftUI"]),
-        .library(name: "OnboardingUIKitApp", targets: ["OnboardingUIKitApp"]),
         .library(name: "OnboardingSwiftUIApp", targets: ["OnboardingSwiftUIApp"]),
     ],
     dependencies: [
@@ -33,16 +32,6 @@ let package = Package(
             dependencies: ["OnboardingShared"],
         ),
         .target(
-            name: "OnboardingUIKitApp",
-            dependencies: ["OnboardingShared"],
-            plugins: [
-                .plugin(
-                    name: "StateBlasterStoryboardPlugin",
-                    package: "StateBlaster",
-                )
-            ]
-        ),
-        .target(
             name: "OnboardingSwiftUIApp",
             dependencies: ["OnboardingSwiftUI"],
         ),
@@ -51,7 +40,6 @@ let package = Package(
             dependencies: [
                 "OnboardingShared",
                 "OnboardingSwiftUI",
-                "OnboardingUIKitApp",
             ],
         ),
     ],
