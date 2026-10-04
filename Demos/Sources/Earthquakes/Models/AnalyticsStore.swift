@@ -1,5 +1,5 @@
 import Foundation
-import Puzzola
+import Muttniks
 
 struct FieldMarker: Equatable {
     let label: String

@@ -1,5 +1,5 @@
-import Puzzola
-import PuzzolaJSON
+import Muttniks
+import MuttniksJSON
 import SwiftUI
 
 struct QuakesView: View {

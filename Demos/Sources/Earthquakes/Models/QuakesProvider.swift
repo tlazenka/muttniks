@@ -1,5 +1,5 @@
 import Foundation
-import Puzzola
+import Muttniks
 
 final class QuakesProvider: @unchecked Sendable {
     let database: Database
