@@ -1,8 +1,8 @@
-# [Puzzola](#-puzzola-a-direct-manipulation-faceted-json-explorer-built-on-sqlite-)/[Muttniks](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger)/[StateBlaster](#stateblaster-)
+# Muttniks
 
-_I.e. Muttniks yoked together by violence with a couple other things_
+_a few things yoked together by violence_
 
-## 🦨 Puzzola: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
+## 🦨 Muttniks: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
 
 First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
@@ -32,9 +32,12 @@ _Then_, the choice is yours, sort of:
 
 _Note: this is not Linux_
 
-## Muttniks: an open source dapp to show you how we built Astro Ledger 
+### Emojis
+🦨🇮🇹🦨🇮🇹
 
-[Muttniks](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially had SSR support](https://github.com/tlazenka/muttniks/tree/v0.1/app/views) too via Twirl). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
+## Muttniks Forever: an open source dapp to show you how we built Astro Ledger 
+
+[The original Muttniks](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded in another direction, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially had SSR support](https://github.com/tlazenka/muttniks/tree/v0.1/app/views) too via Twirl). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
 
 Launch the WIP through:
 
@@ -48,7 +51,7 @@ This waits until an OK response from the Play health endpoint and then opens hom
 
 [Blast to the past](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
 
-## StateBlaster: ???
+## Muttniks & Robin/StateBlaster: ???
 
 I'm simply going to post the `swift`/`gradle` commands here, because there's a good chance we're just going to try to get generative AI to traipse through the code anyway to try to summarize what's going on here, and then merge in the output. In the meantime:
 
