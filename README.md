@@ -10,7 +10,7 @@ First, install [Docker](https://www.docker.com/get-started). Then, build the pro
 
 Next, start up the containers with...
 
-Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger). Unless you'd like a spare `sbt` image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
+Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](#muttniks-forever-an-open-source-dapp-to-show-you-how-we-built-astro-ledger). Unless you'd like a spare `sbt` image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
 
 `docker compose down --volumes --rmi all --remove-orphans`
 
