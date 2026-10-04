@@ -4,27 +4,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "PuzzolaDemo",
+    name: "MuttniksDemo",
     platforms: [.iOS(.v27)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "PuzzolaDemo",
-            targets: ["PuzzolaDemo"]
+            name: "MuttniksDemo",
+            targets: ["MuttniksDemo"]
         )
     ],
     dependencies: [
-        .package(name: "Puzzola", path: "../")
+        .package(name: "Muttniks", path: "../")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "PuzzolaDemo",
+            name: "MuttniksDemo",
             dependencies: [
-                .product(name: "Puzzola", package: "Puzzola"),
-                .product(name: "PuzzolaUIKit", package: "Puzzola"),
-                .product(name: "PuzzolaJSON", package: "Puzzola"),
+                .product(name: "Muttniks", package: "Muttniks"),
+                .product(name: "MuttniksUIKit", package: "Muttniks"),
+                .product(name: "MuttniksJSON", package: "Muttniks"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
