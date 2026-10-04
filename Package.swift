@@ -5,25 +5,25 @@ import CompilerPluginSupport
 import PackageDescription
 
 let package = Package(
-    name: "Puzzola",
+    name: "Muttniks",
     platforms: [.iOS(.v27), .tvOS(.v27), .watchOS(.v27), .macCatalyst(.v27), .macOS(.v26)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Puzzola",
-            targets: ["Puzzola"]
+            name: "Muttniks",
+            targets: ["Muttniks"]
         ),
         .library(
-            name: "PuzzolaUIKit",
-            targets: ["PuzzolaUIKit"]
+            name: "MuttniksUIKit",
+            targets: ["MuttniksUIKit"]
         ),
         .library(
-            name: "PuzzolaJSON",
-            targets: ["PuzzolaJSON"]
+            name: "MuttniksJSON",
+            targets: ["MuttniksJSON"]
         ),
         .executable(
-            name: "puzzola",
-            targets: ["PuzzolaCLI"]
+            name: "muttniks",
+            targets: ["MuttniksCLI"]
         ),
         .library(
             name: "StateBlaster",
@@ -59,7 +59,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "PuzzolaParsers",
+            name: "MuttniksParsers",
             dependencies: ["Do"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
@@ -67,11 +67,11 @@ let package = Package(
         ),
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "PuzzolaMacros",
+            name: "MuttniksMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-                "PuzzolaParsers",
+                "MuttniksParsers",
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
@@ -79,22 +79,22 @@ let package = Package(
         ),
         // Library that exposes a macro as part of its API, which is used in client programs.
         .target(
-            name: "Puzzola",
-            dependencies: ["PuzzolaMacros", "PuzzolaParsers", "CSQLite"],
+            name: "Muttniks",
+            dependencies: ["MuttniksMacros", "MuttniksParsers", "CSQLite"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
         ),
         .target(
-            name: "PuzzolaUIKit",
+            name: "MuttniksUIKit",
             dependencies: [],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
         ),
         .target(
-            name: "PuzzolaJSON",
-            dependencies: ["Puzzola", "PuzzolaParsers"],
+            name: "MuttniksJSON",
+            dependencies: ["Muttniks", "MuttniksParsers"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
@@ -102,8 +102,8 @@ let package = Package(
 
         // A client of the library, which is able to use the macro in its own code.
         .executableTarget(
-            name: "PuzzolaCLI",
-            dependencies: ["Puzzola"],
+            name: "MuttniksCLI",
+            dependencies: ["Muttniks"],
             resources: [.copy("Resources")],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
@@ -112,8 +112,8 @@ let package = Package(
 
         // A test target used to develop the macro implementation.
         .testTarget(
-            name: "PuzzolaTests",
-            dependencies: ["Puzzola", "PuzzolaParsers"],
+            name: "MuttniksTests",
+            dependencies: ["Muttniks", "MuttniksParsers"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],

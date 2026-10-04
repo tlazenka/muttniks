@@ -1,12 +1,12 @@
 //
 //  JSONNode+Evaluator.swift
-//  Puzzola
+//  Muttniks
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
 
-import Puzzola
-import PuzzolaParsers
+import Muttniks
+import MuttniksParsers
 
 extension JSONNode {
     func filtering(expression source: String) throws -> JSONNode? {
@@ -14,7 +14,7 @@ extension JSONNode {
         return filteringFeatures(matching: expression)
     }
 
-    func filteringFeatures(matching expression: PuzzolaParsers.Expression) -> JSONNode? {
+    func filteringFeatures(matching expression: MuttniksParsers.Expression) -> JSONNode? {
         if path == "$.features" {
             let matches = children.filter { $0.matches(expression) }
             guard !matches.isEmpty else { return nil }
@@ -28,7 +28,7 @@ extension JSONNode {
         return replacingChildren(filteredChildren)
     }
 
-    func matches(_ expression: PuzzolaParsers.Expression) -> Bool {
+    func matches(_ expression: MuttniksParsers.Expression) -> Bool {
         return switch expression {
         case .comparison(let comparison):
             compare(node(atRelativePath: comparison.path), using: comparison)
@@ -41,7 +41,7 @@ extension JSONNode {
         }
     }
 
-    func compare(_ node: JSONNode?, using comparison: PuzzolaParsers.Comparison) -> Bool {
+    func compare(_ node: JSONNode?, using comparison: MuttniksParsers.Comparison) -> Bool {
         guard let node else { return false }
 
         switch comparison.value {
@@ -67,7 +67,7 @@ extension JSONNode {
     func compare<T: Comparable>(
         _ lhs: T,
         _ rhs: T,
-        using operation: PuzzolaParsers.ComparisonOperator
+        using operation: MuttniksParsers.ComparisonOperator
     ) -> Bool {
         switch operation {
         case .equal: lhs == rhs

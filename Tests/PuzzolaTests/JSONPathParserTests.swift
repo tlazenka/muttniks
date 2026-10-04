@@ -1,7 +1,7 @@
-import PuzzolaParsers
+import MuttniksParsers
 import Testing
 
-@testable import Puzzola
+@testable import Muttniks
 
 @Test func parsesJSONPathComponents() throws {
     let parsed = try JSONPathParser.parse("$.properties.items[2]").get()

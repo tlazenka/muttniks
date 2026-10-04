@@ -161,7 +161,7 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: swift run puzzola
+    command: swift run muttniks
 
 volumes:
   db-data:

@@ -1,11 +1,11 @@
 //
 //  JSONPathMacro.swift
-//  Puzzola
+//  Muttniks
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
 
-import PuzzolaParsers
+import MuttniksParsers
 import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxBuilder
@@ -13,7 +13,7 @@ import SwiftSyntaxMacros
 
 struct JSONPathDiagnostic: DiagnosticMessage {
     let message: String
-    var diagnosticID: MessageID { MessageID(domain: "Puzzola", id: "invalid #jsonpath") }
+    var diagnosticID: MessageID { MessageID(domain: "Muttniks", id: "invalid #jsonpath") }
     var severity: DiagnosticSeverity { .error }
 }
 

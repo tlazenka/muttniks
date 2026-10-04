@@ -1,12 +1,12 @@
 //
 //  SQL.swift
-//  Puzzola
+//  Muttniks
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
 
 import Foundation
-import PuzzolaParsers
+import MuttniksParsers
 
 public enum SQLiteValue: Sendable, Equatable {
     case integer(Int64)
@@ -80,7 +80,7 @@ public struct SQL: ExpressibleByStringLiteral, ExpressibleByStringInterpolation,
 }
 
 public extension SQL {
-    static func earthquakeIDs(matching expression: PuzzolaParsers.Expression) -> SQL {
+    static func earthquakeIDs(matching expression: MuttniksParsers.Expression) -> SQL {
         var interpolation = SQL.StringInterpolation(
             literalCapacity: 320,
             interpolationCount: 4
@@ -98,7 +98,7 @@ public extension SQL {
     }
 
     static func append(
-        _ expression: PuzzolaParsers.Expression,
+        _ expression: MuttniksParsers.Expression,
         to interpolation: inout SQL.StringInterpolation
     ) {
         switch expression {

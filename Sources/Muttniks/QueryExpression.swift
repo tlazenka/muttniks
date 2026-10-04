@@ -1,11 +1,11 @@
 //
 //  QueryExpression.swift
-//  Puzzola
+//  Muttniks
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
 
-import PuzzolaParsers
+import MuttniksParsers
 
 public enum QueryExpressionError: Error, CustomStringConvertible {
     case invalid(offset: Int, expected: String)

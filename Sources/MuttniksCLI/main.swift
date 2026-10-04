@@ -1,12 +1,12 @@
 //
 //  main.swift
-//  Puzzola
+//  Muttniks
 //
 //  Created by Francis Lazenka on 10/1/26.
 //
 
 import Foundation
-import Puzzola
+import Muttniks
 
 let arguments = Array(CommandLine.arguments.dropFirst())
 guard !arguments.isEmpty else {

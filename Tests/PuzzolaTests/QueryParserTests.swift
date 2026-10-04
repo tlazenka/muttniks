@@ -1,7 +1,7 @@
-import PuzzolaParsers
+import MuttniksParsers
 import Testing
 
-@testable import Puzzola
+@testable import Muttniks
 
 @Test func parsesAndExpression() throws {
     let expression = try QueryParser.parse(

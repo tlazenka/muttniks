@@ -28,7 +28,7 @@ _Then_, the choice is yours, sort of:
 
 | Scrub | Filter | Scrubap |
 | --- | --- | --- |
-| <img width="1206" height="2622" alt="Puzzola-1" src="https://github.com/user-attachments/assets/144f00a7-0f53-4c18-87e4-104b2cce862e" /> | <img width="1206" height="2622" alt="Puzzola-2" src="https://github.com/user-attachments/assets/4584aabb-0b60-4f52-9eb7-f757b2e8cb59" /> | <img width="1206" height="2622" alt="Puzzola-3" src="https://github.com/user-attachments/assets/b936a281-f299-483e-96ec-4abc3efd0400" /> |
+| <img width="1206" height="2622" alt="Muttniks-1" src="https://github.com/user-attachments/assets/144f00a7-0f53-4c18-87e4-104b2cce862e" /> | <img width="1206" height="2622" alt="Muttniks-2" src="https://github.com/user-attachments/assets/4584aabb-0b60-4f52-9eb7-f757b2e8cb59" /> | <img width="1206" height="2622" alt="Muttniks-3" src="https://github.com/user-attachments/assets/b936a281-f299-483e-96ec-4abc3efd0400" /> |
 
 _Note: this is not Linux_
 

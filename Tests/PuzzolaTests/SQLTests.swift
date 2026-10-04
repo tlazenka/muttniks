@@ -1,6 +1,6 @@
 import Testing
 
-@testable import Puzzola
+@testable import Muttniks
 
 @Test func interpolationUsesBindings() {
     let minimumMagnitude = 7.0
