@@ -33,10 +33,6 @@ let package = Package(
             name: "StateBlasterClient",
             targets: ["StateBlasterClient"]
         ),
-        .plugin(
-            name: "StateBlasterStoryboardPlugin",
-            targets: ["StateBlasterStoryboardPlugin"]
-        ),
         .library(
             name: "Do",
             targets: ["Do"]
@@ -121,15 +117,6 @@ let package = Package(
 
         .target(
             name: "StateBlasterPresentationParser"
-        ),
-        .executableTarget(
-            name: "StateBlasterStoryboardGenerator",
-            dependencies: ["StateBlasterPresentationParser"]
-        ),
-        .plugin(
-            name: "StateBlasterStoryboardPlugin",
-            capability: .buildTool(),
-            dependencies: ["StateBlasterStoryboardGenerator"]
         ),
         .macro(
             name: "StateBlasterMacros",
