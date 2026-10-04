@@ -1,23 +1,23 @@
 name: Earthquakes
 options:
-  bundleIdPrefix: com.puzzola
+  bundleIdPrefix: com.muttniks
   deploymentTarget:
     iOS: "27.0"
 packages:
-  Puzzola:
+  Muttniks:
     path: ../
 targets:
-  PuzzolaDemo:
+  MuttniksDemo:
     type: application
     supportedDestinations: [iOS]
     sources: [Sources]
     dependencies:
-      - package: Puzzola
-        product: Puzzola
-      - package: Puzzola
-        product: PuzzolaUIKit
-      - package: Puzzola
-        product: PuzzolaJSON
+      - package: Muttniks
+        product: Muttniks
+      - package: Muttniks
+        product: MuttniksUIKit
+      - package: Muttniks
+        product: MuttniksJSON
     info:
       path: Info.plist
       properties:

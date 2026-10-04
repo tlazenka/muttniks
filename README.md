@@ -1,8 +1,8 @@
-# [Puzzola](#-puzzola-a-direct-manipulation-faceted-json-explorer-built-on-sqlite-)/[Muttniks](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger)/[StateBlaster](#stateblaster-)
+# Muttniks
 
-_I.e. Muttniks yoked together by violence with a couple other things_
+_a few things yoked together by violence_
 
-## 🦨 Puzzola: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
+## 🦨 Muttniks: a direct manipulation faceted JSON explorer built on SQLite 🇮🇹
 
 First, install [Docker](https://www.docker.com/get-started). Then, build the project with:
 
@@ -10,7 +10,7 @@ First, install [Docker](https://www.docker.com/get-started). Then, build the pro
 
 Next, start up the containers with...
 
-Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](#muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger). Unless you'd like a spare `sbt` image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
+Oh! I'm terribly sorry, these instructions run the _other_ [project hosted here](#muttniks-forever-an-open-source-dapp-to-show-you-how-we-built-astro-ledger). Unless you'd like a spare `sbt` image hanging around, you can reclaim the 1-2 GB we've accidentally downloaded by running:
 
 `docker compose down --volumes --rmi all --remove-orphans`
 
@@ -32,9 +32,12 @@ _Then_, the choice is yours, sort of:
 
 _Note: this is not Linux_
 
-## Muttniks: an open source dapp to show you how we built Astro Ledger 
+### Emojis
+🦨🇮🇹🦨🇮🇹
 
-[Muttniks](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially had SSR support](https://github.com/tlazenka/muttniks/tree/v0.1/app/views) too via Twirl). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
+## Muttniks Forever: an open source dapp to show you how we built Astro Ledger 
+
+[The original Muttniks](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b) has been upgraded in another direction, from Scala/Play! 2 to 3, and from single-page application to server-side rendered (yes, that is an upgrade, although interestingly Muttniks [initially had SSR support](https://github.com/tlazenka/muttniks/tree/v0.1/app/views) too via Twirl). An upgrade from another perspective came from removing Clojure in favor of a Scala monolith.
 
 Launch the WIP through:
 
@@ -48,7 +51,7 @@ This waits until an OK response from the Play health endpoint and then opens hom
 
 [Blast to the past](https://hackernoon.com/muttniks-an-open-source-dapp-to-show-you-how-we-built-astro-ledger-8a063b788d0b)
 
-## StateBlaster: ???
+## Muttniks & Robin/StateBlaster: ???
 
 I'm simply going to post the `swift`/`gradle` commands here, because there's a good chance we're just going to try to get generative AI to traipse through the code anyway to try to summarize what's going on here, and then merge in the output. In the meantime:
 
@@ -58,15 +61,20 @@ I'm simply going to post the `swift`/`gradle` commands here, because there's a g
 
 `swift format . --recursive --in-place`
 
-`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`
-`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`
-`open ./DemoApps/OnboardingStoryboard/OnboardingStoryboard.xcodeproj/`
+(Code formatting. Serious stuff, thus #2 on the list)
+
+~`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`~
+
+~`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`~
+
+(I need to add `xcodegen` support for these)
 
 ### Kotlin/Ktor/Android
 
 `rm -rf ~/.m2/repository/com/stateblaster/`
-
 `ls -al ~/.m2/repository/com/stateblaster`
+
+(Just to make sure we're publishing locally below)
 
 ```
 ./gradlew \
