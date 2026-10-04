@@ -61,10 +61,10 @@ I'm simply going to post the `swift`/`gradle` commands here, because there's a g
 
 `swift format . --recursive --in-place`
 
-`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`
-`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`
-~`open ./DemoApps/OnboardingStoryboard/OnboardingStoryboard.xcodeproj/`~
-This was an attempt to generate a Storyboard file from an enum. But then I realized most folks using UIKit now are primarily doing it for performance and feature set reasons, which suggests to me they're doing everything programmatically, or are at least focused in just nibs
+~`open ./DemoApps/OnboardingStick/OnboardingStick.xcodeproj/`~
+~`open ./DemoApps/OnboardingSwiftUI/OnboardingSwiftUI.xcodeproj/`~
+
+(I need to add xcodegen support for these)
 
 ### Kotlin/Ktor/Android
 
