@@ -34,12 +34,13 @@ final class BLECentralManagerMock: BLECentralManagerProtocol {
     }
 
     func discover(_ peripheral: any BLEPeripheral) {
-        centraManagerDelegate?.bleCentralManager(
-            self,
-            didDiscover: peripheral,
-            advertisementData: [:],
-            rssi: -50
-        )
+        centraManagerDelegate?
+            .bleCentralManager(
+                self,
+                didDiscover: peripheral,
+                advertisementData: [:],
+                rssi: -50
+            )
     }
 
     func didConnect(_ peripheral: any BLEPeripheral) {

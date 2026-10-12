@@ -54,7 +54,10 @@ public struct ScreenField: Sendable {
     public let contentType: String?
 
     private init(kind: Kind, name: String, label: String, contentType: String?) {
-        self.kind = kind; self.name = name; self.label = label; self.contentType = contentType
+        self.kind = kind
+        self.name = name
+        self.label = label
+        self.contentType = contentType
     }
 
     public static func text(_ name: String, label: String, contentType: String? = nil) -> Self {
@@ -79,7 +82,10 @@ public struct ScreenAction: Sendable {
     public let enabledWhen: ScreenCondition
 
     private init(kind: Kind, name: String, title: String, enabledWhen: ScreenCondition) {
-        self.kind = kind; self.name = name; self.title = title; self.enabledWhen = enabledWhen
+        self.kind = kind
+        self.name = name
+        self.title = title
+        self.enabledWhen = enabledWhen
     }
 
     public static func sync(_ name: String, title: String, enabledWhen: ScreenCondition = .always) -> Self {

@@ -18,11 +18,21 @@ _Then_, the choice is yours, sort of:
 
 ### (macOS >= 26) && (Xcode >= 27)
 
-`cd Demos && brew install mint && mint run xcodegen && open Earthquakes.xcodeproj`
+`cd Demos && brew install mint && mint run xcodegen && open MuttniksDemos.xcodeproj`
 
 ### Linux || macOS
 
-`docker compose run --rm earthquakes "$.properties.mag >= 5"`
+`docker compose run --rm earthquakes-cli "$.properties.mag >= 5"`
+
+There actually is a server component, here, too.
+
+```
+docker compose up feed-server -d && \
+  until code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health); [ "$code" = "200" ]; do echo "Waiting for Swift server... status: $code"; sleep 3; done && \
+  open -a Safari http://localhost:8080
+```
+
+This allows you to sign in on the iPhone app.
 
 ### Screenshots
 
@@ -31,9 +41,6 @@ _Then_, the choice is yours, sort of:
 | <img width="1206" height="2622" alt="Puzzola-1" src="https://github.com/user-attachments/assets/144f00a7-0f53-4c18-87e4-104b2cce862e" /> | <img width="1206" height="2622" alt="Puzzola-2" src="https://github.com/user-attachments/assets/4584aabb-0b60-4f52-9eb7-f757b2e8cb59" /> | <img width="1206" height="2622" alt="Puzzola-3" src="https://github.com/user-attachments/assets/b936a281-f299-483e-96ec-4abc3efd0400" /> |
 
 _Note: this is not Linux_
-
-### Emojis
-🦨🇮🇹🦨🇮🇹
 
 ## Muttniks Forever: an open source dapp to show you how we built Astro Ledger 
 

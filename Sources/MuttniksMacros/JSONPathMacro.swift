@@ -13,7 +13,7 @@ import SwiftSyntaxMacros
 
 struct JSONPathDiagnostic: DiagnosticMessage {
     let message: String
-    var diagnosticID: MessageID { MessageID(domain: "Muttniks", id: "invalid #jsonpath") }
+    var diagnosticID: MessageID { MessageID(domain: "SQLiteJSONBlaster", id: "invalid #jsonpath") }
     var severity: DiagnosticSeverity { .error }
 }
 

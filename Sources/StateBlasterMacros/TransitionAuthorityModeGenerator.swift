@@ -48,40 +48,49 @@ func generateTransitionAuthorityMachineWrapper(
             source.transitions.map { ($0, source.caseName) }
         },
         by: { $0.0 }
-    ).mapValues(\.count)
+    )
+    .mapValues(\.count)
 
-    let authorizers = states.flatMap { source in
-        source.transitions.compactMap { name -> String? in
-            guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
-            return generateTransitionAuthorityAuthorizer(
-                from: source,
-                to: destination,
-                disambiguateSource: incomingCounts[destination.caseName, default: 0] > 1,
-                access: access
-            )
+    let authorizers =
+        states.flatMap { source in
+            source.transitions.compactMap { name -> String? in
+                guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
+                return generateTransitionAuthorityAuthorizer(
+                    from: source,
+                    to: destination,
+                    disambiguateSource: incomingCounts[destination.caseName, default: 0] > 1,
+                    access: access
+                )
+            }
         }
-    }.joined(separator: "\n\n")
+        .joined(separator: "\n\n")
 
-    let transitionFactories = states.flatMap { source in
-        source.transitions.compactMap { name -> String? in
-            guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
-            return generateTransitionAuthorityTransitionFactory(from: source, to: destination, access: access)
+    let transitionFactories =
+        states.flatMap { source in
+            source.transitions.compactMap { name -> String? in
+                guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
+                return generateTransitionAuthorityTransitionFactory(from: source, to: destination, access: access)
+            }
         }
-    }.joined(separator: "\n\n")
+        .joined(separator: "\n\n")
 
-    let backAuthorizers = states.compactMap { source -> String? in
-        guard let back = source.back,
-            let destination = states.first(where: { $0.caseName == back })
-        else { return nil }
-        return generateBackAuthorizer(from: source, to: destination, access: access)
-    }.joined(separator: "\n\n")
+    let backAuthorizers =
+        states.compactMap { source -> String? in
+            guard let back = source.back,
+                let destination = states.first(where: { $0.caseName == back })
+            else { return nil }
+            return generateBackAuthorizer(from: source, to: destination, access: access)
+        }
+        .joined(separator: "\n\n")
 
-    let backFactories = states.compactMap { source -> String? in
-        guard let back = source.back,
-            let destination = states.first(where: { $0.caseName == back })
-        else { return nil }
-        return generateBackFactory(from: source, to: destination, access: access)
-    }.joined(separator: "\n\n")
+    let backFactories =
+        states.compactMap { source -> String? in
+            guard let back = source.back,
+                let destination = states.first(where: { $0.caseName == back })
+            else { return nil }
+            return generateBackFactory(from: source, to: destination, access: access)
+        }
+        .joined(separator: "\n\n")
 
     return """
         \(access) struct Machine<Owner: AnyObject> {
@@ -154,14 +163,18 @@ private func generateTransitionAuthorityTransitionFactory(
     let sourcePayloadPattern =
         source.fields.isEmpty ? "" : ", " + source.fields.map { _ in "_" }.joined(separator: ", ")
     let callArguments = required.isEmpty ? "" : argumentList(for: required)
-    let payloadBindings = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "let \(local) = next.\($0.name)"
-    }.joined(separator: "\n                ")
-    let payloadArguments = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "\($0.name): \(local)"
-    }.joined(separator: ", ")
+    let payloadBindings = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "let \(local) = next.\($0.name)"
+        }
+        .joined(separator: "\n                ")
+    let payloadArguments = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "\($0.name): \(local)"
+        }
+        .joined(separator: ", ")
     let destinationSuffix = payloadArguments.isEmpty ? "" : ", \(payloadArguments)"
 
     return """
@@ -210,14 +223,18 @@ private func generateBackFactory(
     let sourcePayloadPattern =
         source.fields.isEmpty ? "" : ", " + source.fields.map { _ in "_" }.joined(separator: ", ")
     let callArguments = required.isEmpty ? "" : argumentList(for: required)
-    let payloadBindings = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "let \(local) = next.\($0.name)"
-    }.joined(separator: "\n                ")
-    let payloadArguments = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "\($0.name): \(local)"
-    }.joined(separator: ", ")
+    let payloadBindings = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "let \(local) = next.\($0.name)"
+        }
+        .joined(separator: "\n                ")
+    let payloadArguments = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "\($0.name): \(local)"
+        }
+        .joined(separator: ", ")
     let destinationSuffix = payloadArguments.isEmpty ? "" : ", \(payloadArguments)"
 
     return """

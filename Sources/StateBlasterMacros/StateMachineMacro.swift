@@ -55,9 +55,10 @@ public struct StateMachineMacro: PeerMacro {
         let access = accessLevel(of: enumDecl)
 
         let presentation = try parsePresentation(from: enumDecl, states: states)
-        let swiftUIPresentation = enumDecl.attributes.compactMap { $0.as(AttributeSyntax.self) }.contains {
-            $0.attributeName.trimmedDescription == "SwiftUIPresentation"
-        }
+        let swiftUIPresentation = enumDecl.attributes.compactMap { $0.as(AttributeSyntax.self) }
+            .contains {
+                $0.attributeName.trimmedDescription == "SwiftUIPresentation"
+            }
         return [
             DeclSyntax(
                 stringLiteral: generateMachine(
@@ -102,8 +103,17 @@ struct Field {
     let type: String
 }
 
-struct ScreenFieldDescription { let name: String; let label: String; let contentType: String? }
-struct ScreenActionDescription { let name: String; let title: String; let isAsync: Bool; let enabledWhen: String }
+struct ScreenFieldDescription {
+    let name: String
+    let label: String
+    let contentType: String?
+}
+struct ScreenActionDescription {
+    let name: String
+    let title: String
+    let isAsync: Bool
+    let enabledWhen: String
+}
 struct ScreenDescription {
     let title: String
     let message: String
@@ -133,9 +143,10 @@ func parsePresentation(
             let element = caseDecl.elements.first
         else { continue }
         guard
-            let attribute = caseDecl.attributes.compactMap({ $0.as(AttributeSyntax.self) }).first(where: {
-                $0.attributeName.trimmedDescription == "Screen"
-            })
+            let attribute = caseDecl.attributes.compactMap({ $0.as(AttributeSyntax.self) })
+                .first(where: {
+                    $0.attributeName.trimmedDescription == "Screen"
+                })
         else { continue }
 
         sawScreen = true
@@ -158,18 +169,20 @@ func parsePresentation(
             case "message": message = try stringLiteral(expression, label: "message")
             case "systemImage": systemImage = try stringLiteral(expression, label: "systemImage")
             case "kind":
-                kind = expression.replacingOccurrences(of: "ScreenKind.", with: "").replacingOccurrences(
-                    of: ".",
-                    with: ""
-                )
+                kind = expression.replacingOccurrences(of: "ScreenKind.", with: "")
+                    .replacingOccurrences(
+                        of: ".",
+                        with: ""
+                    )
             case "fields": fields = try parseScreenFields(expression)
             case "actions": actions = try parseScreenActions(expression)
             case "visibleWhen": visibleWhen = try parseCondition(expression)
             case "fallback":
-                fallback = expression.replacingOccurrences(of: "ScreenKind.", with: "").replacingOccurrences(
-                    of: ".",
-                    with: ""
-                )
+                fallback = expression.replacingOccurrences(of: "ScreenKind.", with: "")
+                    .replacingOccurrences(
+                        of: ".",
+                        with: ""
+                    )
             default: break
             }
         }
@@ -201,12 +214,14 @@ func parseScreenFields(_ expression: String) throws -> [ScreenFieldDescription] 
     let pattern = #"\.text\(\s*\"([^\"]+)\"\s*,\s*label:\s*\"([^\"]+)\"(?:\s*,\s*contentType:\s*\"([^\"]+)\")?\s*\)"#
     let regex = try NSRegularExpression(pattern: pattern)
     let ns = expression as NSString
-    return regex.matches(in: expression, range: NSRange(location: 0, length: ns.length)).map { match in
-        func group(_ index: Int) -> String? {
-            let r = match.range(at: index); return r.location == NSNotFound ? nil : ns.substring(with: r)
+    return regex.matches(in: expression, range: NSRange(location: 0, length: ns.length))
+        .map { match in
+            func group(_ index: Int) -> String? {
+                let r = match.range(at: index)
+                return r.location == NSNotFound ? nil : ns.substring(with: r)
+            }
+            return .init(name: group(1)!, label: group(2)!, contentType: group(3))
         }
-        return .init(name: group(1)!, label: group(2)!, contentType: group(3))
-    }
 }
 
 func parseScreenActions(_ expression: String) throws -> [ScreenActionDescription] {
@@ -214,17 +229,19 @@ func parseScreenActions(_ expression: String) throws -> [ScreenActionDescription
         #"\.(sync|async)\(\s*\"([^\"]+)\"\s*,\s*title:\s*\"([^\"]+)\"(?:\s*,\s*enabledWhen:\s*(.+?))?\s*\)(?=\s*(?:,|\]))"#
     let regex = try NSRegularExpression(pattern: pattern)
     let ns = expression as NSString
-    return try regex.matches(in: expression, range: NSRange(location: 0, length: ns.length)).map { match in
-        func group(_ index: Int) -> String? {
-            let r = match.range(at: index); return r.location == NSNotFound ? nil : ns.substring(with: r)
+    return try regex.matches(in: expression, range: NSRange(location: 0, length: ns.length))
+        .map { match in
+            func group(_ index: Int) -> String? {
+                let r = match.range(at: index)
+                return r.location == NSNotFound ? nil : ns.substring(with: r)
+            }
+            return .init(
+                name: group(2)!,
+                title: group(3)!,
+                isAsync: group(1) == "async",
+                enabledWhen: try parseCondition(group(4) ?? ".always")
+            )
         }
-        return .init(
-            name: group(2)!,
-            title: group(3)!,
-            isAsync: group(1) == "async",
-            enabledWhen: try parseCondition(group(4) ?? ".always")
-        )
-    }
 }
 
 func parseCondition(_ expression: String) throws -> String {
@@ -257,8 +274,16 @@ func splitTopLevel(_ value: String) -> [String] {
     var result: [String] = []
     for ch in value {
         if ch == "\"" { quoted.toggle() }
-        if !quoted { if ch == "(" || ch == "[" { depth += 1 }; if ch == ")" || ch == "]" { depth -= 1 } }
-        if ch == "," && depth == 0 && !quoted { result.append(current); current = "" } else { current.append(ch) }
+        if !quoted {
+            if ch == "(" || ch == "[" { depth += 1 }
+            if ch == ")" || ch == "]" { depth -= 1 }
+        }
+        if ch == "," && depth == 0 && !quoted {
+            result.append(current)
+            current = ""
+        } else {
+            current.append(ch)
+        }
     }
     if !current.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { result.append(current) }
     return result
@@ -281,32 +306,41 @@ func generatePresentationMembers(
     access: String
 ) -> String {
     let cases = states.map { "    case \($0.caseName)" }.joined(separator: "\n")
-    let kinds = Array(Set(states.compactMap { screens[$0.caseName]?.kind })).sorted().map { "    case \($0)" }.joined(
-        separator: "\n"
-    )
-    let descriptors = states.map { state -> String in
-        let screen = screens[state.caseName]!
-        let transitions = state.transitions.map { ".\($0)" }.joined(separator: ", ")
-        let back = state.back.map { ".\($0)" } ?? "nil"
-        let fields = screen.fields.map {
-            ".init(name: \(swiftString($0.name)), label: \(swiftString($0.label)), contentType: \($0.contentType.map(swiftString) ?? "nil"))"
-        }.joined(separator: ", ")
-        let actions = screen.actions.map {
-            ".init(name: \(swiftString($0.name)), title: \(swiftString($0.title)), isAsync: \($0.isAsync), enabledWhen: \($0.enabledWhen))"
-        }.joined(separator: ", ")
-        let fallback = screen.fallback.map { ".\($0)" } ?? "nil"
-        return
-            "    .init(state: .\(state.caseName), title: \(swiftString(screen.title)), message: \(swiftString(screen.message)), systemImage: \(swiftString(screen.systemImage)), kind: .\(screen.kind), fields: [\(fields)], actions: [\(actions)], visibleWhen: \(screen.visibleWhen), fallback: \(fallback), transitions: [\(transitions)], back: \(back))"
-    }.joined(separator: ",\n")
+    let kinds = Array(Set(states.compactMap { screens[$0.caseName]?.kind })).sorted().map { "    case \($0)" }
+        .joined(
+            separator: "\n"
+        )
+    let descriptors =
+        states.map { state -> String in
+            let screen = screens[state.caseName]!
+            let transitions = state.transitions.map { ".\($0)" }.joined(separator: ", ")
+            let back = state.back.map { ".\($0)" } ?? "nil"
+            let fields = screen.fields
+                .map {
+                    ".init(name: \(swiftString($0.name)), label: \(swiftString($0.label)), contentType: \($0.contentType.map(swiftString) ?? "nil"))"
+                }
+                .joined(separator: ", ")
+            let actions = screen.actions
+                .map {
+                    ".init(name: \(swiftString($0.name)), title: \(swiftString($0.title)), isAsync: \($0.isAsync), enabledWhen: \($0.enabledWhen))"
+                }
+                .joined(separator: ", ")
+            let fallback = screen.fallback.map { ".\($0)" } ?? "nil"
+            return
+                "    .init(state: .\(state.caseName), title: \(swiftString(screen.title)), message: \(swiftString(screen.message)), systemImage: \(swiftString(screen.systemImage)), kind: .\(screen.kind), fields: [\(fields)], actions: [\(actions)], visibleWhen: \(screen.visibleWhen), fallback: \(fallback), transitions: [\(transitions)], back: \(back))"
+        }
+        .joined(separator: ",\n")
     let accessPrefix = access == "internal" ? "" : "\(access) "
     let allFields = states.flatMap { screens[$0.caseName]?.fields ?? [] }
-    let uniqueFields = Dictionary(grouping: allFields, by: \.name).values.compactMap(\.first).sorted {
-        $0.name < $1.name
-    }
+    let uniqueFields = Dictionary(grouping: allFields, by: \.name).values.compactMap(\.first)
+        .sorted {
+            $0.name < $1.name
+        }
     let allActions = states.flatMap { screens[$0.caseName]?.actions ?? [] }
-    let uniqueActions = Dictionary(grouping: allActions, by: \.name).values.compactMap(\.first).sorted {
-        $0.name < $1.name
-    }
+    let uniqueActions = Dictionary(grouping: allActions, by: \.name).values.compactMap(\.first)
+        .sorted {
+            $0.name < $1.name
+        }
     let conditionTexts = states.flatMap { state -> [String] in
         guard let screen = screens[state.caseName] else { return [] }
         return [screen.visibleWhen] + screen.actions.map(\.enabledWhen)
@@ -314,7 +348,7 @@ func generatePresentationMembers(
     let flagPattern = try! NSRegularExpression(pattern: #"\.flag\("([^"]+)"\)"#)
     var flags = Set<String>()
     for text in conditionTexts {
-        let ns = text as NSString;
+        let ns = text as NSString
         for m in flagPattern.matches(in: text, range: NSRange(location: 0, length: ns.length)) {
             flags.insert(ns.substring(with: m.range(at: 1)))
         }
@@ -322,7 +356,8 @@ func generatePresentationMembers(
     let modelRequirements =
         (uniqueFields.map { "        var \($0.name): String { get set }" }
         + flags.sorted().map { "        var \($0): Bool { get }" }
-        + uniqueActions.map { "        func \($0.name)()\($0.isAsync ? " async" : "")" }).joined(separator: "\n")
+        + uniqueActions.map { "        func \($0.name)()\($0.isAsync ? " async" : "")" })
+        .joined(separator: "\n")
 
     return """
         \(accessPrefix)enum Screen: String, CaseIterable, Hashable, Sendable {
@@ -392,25 +427,31 @@ func generateSwiftUIPresentation(
     let flagPattern = try! NSRegularExpression(pattern: #"\.flag\(\"([^\"]+)\"\)"#)
     var flags = Set<String>()
     for text in conditionTexts {
-        let ns = text as NSString;
+        let ns = text as NSString
         for m in flagPattern.matches(in: text, range: NSRange(location: 0, length: ns.length)) {
             flags.insert(ns.substring(with: m.range(at: 1)))
         }
     }
 
-    let fieldBindingCases = fields.map {
-        "case \(swiftString($0.name)): return SwiftUI.Binding(get: { model.\($0.name) }, set: { model.\($0.name) = $0 })"
-    }.joined(separator: "\n                    ")
-    let valueCases = fields.map { "case \(swiftString($0.name)): return model.\($0.name)" }.joined(
-        separator: "\n                    "
-    )
-    let flagCases = flags.sorted().map { "case \(swiftString($0)): return model.\($0)" }.joined(
-        separator: "\n                    "
-    )
-    let actionCases = actions.map { action in
-        if action.isAsync { return "case \(swiftString(action.name)): Task { await model.\(action.name)() }" }
-        return "case \(swiftString(action.name)): model.\(action.name)()"
-    }.joined(separator: "\n                    ")
+    let fieldBindingCases =
+        fields.map {
+            "case \(swiftString($0.name)): return SwiftUI.Binding(get: { model.\($0.name) }, set: { model.\($0.name) = $0 })"
+        }
+        .joined(separator: "\n                    ")
+    let valueCases = fields.map { "case \(swiftString($0.name)): return model.\($0.name)" }
+        .joined(
+            separator: "\n                    "
+        )
+    let flagCases = flags.sorted().map { "case \(swiftString($0)): return model.\($0)" }
+        .joined(
+            separator: "\n                    "
+        )
+    let actionCases =
+        actions.map { action in
+            if action.isAsync { return "case \(swiftString(action.name)): Task { await model.\(action.name)() }" }
+            return "case \(swiftString(action.name)): model.\(action.name)()"
+        }
+        .joined(separator: "\n                    ")
 
     return """
         @MainActor
@@ -779,20 +820,26 @@ func generateMachine(
         screenProjection = ""
         presentationMembers = ""
     }
-    let initialSwitch = states.map { "case .\($0.caseName): \($0.isInitial ? "true" : "false")" }.joined(
-        separator: "\n            "
-    )
-    let terminalSwitch = states.map { "case .\($0.caseName): \($0.isTerminal ? "true" : "false")" }.joined(
-        separator: "\n            "
-    )
-    let transitionSwitch = states.map { state in
-        let values = state.transitions.map { ".\($0)" }.joined(separator: ", ")
-        return "case .\(state.caseName): [\(values)]"
-    }.joined(separator: "\n            ")
+    let initialSwitch = states.map { "case .\($0.caseName): \($0.isInitial ? "true" : "false")" }
+        .joined(
+            separator: "\n            "
+        )
+    let terminalSwitch = states.map { "case .\($0.caseName): \($0.isTerminal ? "true" : "false")" }
+        .joined(
+            separator: "\n            "
+        )
+    let transitionSwitch =
+        states.map { state in
+            let values = state.transitions.map { ".\($0)" }.joined(separator: ", ")
+            return "case .\(state.caseName): [\(values)]"
+        }
+        .joined(separator: "\n            ")
 
-    let stateDeclarations = states.map {
-        generateState($0, allStates: states, access: memberAccess, mode: mode)
-    }.joined(separator: "\n\n")
+    let stateDeclarations =
+        states.map {
+            generateState($0, allStates: states, access: memberAccess, mode: mode)
+        }
+        .joined(separator: "\n\n")
     let runtimeDeclarations = generateRuntime(
         states: states,
         access: memberAccess,
@@ -855,23 +902,27 @@ func generateRuntime(
     terminalSwitch: String,
     transitionSwitch: String
 ) -> String {
-    let screenCases = states.map { state in
-        let payload = state.fields.isEmpty ? "" : ", \(parameterList(for: state.fields))"
-        return "case \(state.caseName)(StateWitness<\(state.typeName)>\(payload))"
-    }.joined(separator: "\n        ")
+    let screenCases =
+        states.map { state in
+            let payload = state.fields.isEmpty ? "" : ", \(parameterList(for: state.fields))"
+            return "case \(state.caseName)(StateWitness<\(state.typeName)>\(payload))"
+        }
+        .joined(separator: "\n        ")
 
-    let equalitySwitch = states.map { state in
-        let ignored = state.fields.map { _ in "_" }.joined(separator: ", ")
-        let lhs =
-            ignored.isEmpty
-            ? ".\(state.caseName)(let lhsWitness)"
-            : ".\(state.caseName)(let lhsWitness, \(ignored))"
-        let rhs =
-            ignored.isEmpty
-            ? ".\(state.caseName)(let rhsWitness)"
-            : ".\(state.caseName)(let rhsWitness, \(ignored))"
-        return "case (\(lhs), \(rhs)): lhsWitness == rhsWitness"
-    }.joined(separator: "\n            ")
+    let equalitySwitch =
+        states.map { state in
+            let ignored = state.fields.map { _ in "_" }.joined(separator: ", ")
+            let lhs =
+                ignored.isEmpty
+                ? ".\(state.caseName)(let lhsWitness)"
+                : ".\(state.caseName)(let lhsWitness, \(ignored))"
+            let rhs =
+                ignored.isEmpty
+                ? ".\(state.caseName)(let rhsWitness)"
+                : ".\(state.caseName)(let rhsWitness, \(ignored))"
+            return "case (\(lhs), \(rhs)): lhsWitness == rhsWitness"
+        }
+        .joined(separator: "\n            ")
 
     let stateDeclaration = """
         \(access) enum State: Equatable {
@@ -931,13 +982,17 @@ func generateInitialState(for state: StateDescription, access: String, mode: Mod
         : "\(access) static func initialState(\(params)) -> State"
     let startCall = state.fields.isEmpty ? "start()" : "start(\(args))"
     let witnessArgument = mode.isNoncopyable ? "consume initial" : "initial"
-    let payloadBindings = state.fields.map {
-        "let screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst()) = initial.\($0.name)"
-    }.joined(separator: "\n        ")
-    let payloadArguments = state.fields.map {
-        let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "\($0.name): \(local)"
-    }.joined(separator: ", ")
+    let payloadBindings = state.fields
+        .map {
+            "let screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst()) = initial.\($0.name)"
+        }
+        .joined(separator: "\n        ")
+    let payloadArguments = state.fields
+        .map {
+            let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "\($0.name): \(local)"
+        }
+        .joined(separator: ", ")
     let suffix = payloadArguments.isEmpty ? "" : ", \(payloadArguments)"
 
     return """
@@ -982,16 +1037,19 @@ func generateState(
     }
 
     let constructionTargets = state.transitions + (state.back.map { [$0] } ?? [])
-    let transitionMethods = constructionTargets.compactMap { destinationName -> String? in
-        guard let destination = allStates.first(where: { $0.caseName == destinationName }) else { return nil }
-        return generateTransition(from: state, to: destination, access: access, mode: mode)
-    }.joined(separator: "\n\n    ")
+    let transitionMethods =
+        constructionTargets.compactMap { destinationName -> String? in
+            guard let destination = allStates.first(where: { $0.caseName == destinationName }) else { return nil }
+            return generateTransition(from: state, to: destination, access: access, mode: mode)
+        }
+        .joined(separator: "\n\n    ")
 
     let bodyParts = [
         properties,
         initializer,
         transitionMethods,
-    ].filter { !$0.isEmpty }
+    ]
+    .filter { !$0.isEmpty }
 
     return """
         \(access) struct \(state.typeName): \(conformances.joined(separator: ", ")) {
@@ -1014,11 +1072,13 @@ func generateTransition(
         ? "\(access) \(modifier)func \(destination.caseName)() -> \(destination.typeName)"
         : "\(access) \(modifier)func \(destination.caseName)(\(parameterList(for: required))) -> \(destination.typeName)"
 
-    let arguments = destination.fields.map { field in
-        reusable[field.name] == field.type
-            ? "\(field.name): self.\(field.name)"
-            : "\(field.name): \(field.name)"
-    }.joined(separator: ", ")
+    let arguments = destination.fields
+        .map { field in
+            reusable[field.name] == field.type
+                ? "\(field.name): self.\(field.name)"
+                : "\(field.name): \(field.name)"
+        }
+        .joined(separator: ", ")
     let construction =
         destination.fields.isEmpty
         ? "\(destination.typeName)()"

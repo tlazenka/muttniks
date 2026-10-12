@@ -178,12 +178,13 @@ public enum QueryParser {
     }
 
     public static func parse(_ source: String) -> Result<Expression, ParseError> {
-        expression.parse(CharStream(source)).flatMap { value, rest in
-            guard rest.isAtEnd else {
-                return .failure(ParseError(offset: rest.offset, expected: "End of expression"))
+        expression.parse(CharStream(source))
+            .flatMap { value, rest in
+                guard rest.isAtEnd else {
+                    return .failure(ParseError(offset: rest.offset, expected: "End of expression"))
+                }
+                return .success(value)
             }
-            return .success(value)
-        }
     }
 }
 

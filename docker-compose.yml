@@ -137,33 +137,75 @@ services:
       app:
         condition: service_healthy
 
-  tests:
-    build:
-        context: .
-        dockerfile: Dockerfile
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: earthquake
+      POSTGRES_DB: earthquakes
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - .:/app
-    working_dir: /app
-    command: swift test
-  format:
-    build:
-        context: .
-        dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: swift format lint --recursive .
+      - postgres-data:/var/lib/postgresql
+      - ./Demos/FeedServer/migrations/001-photos.sql:/docker-entrypoint-initdb.d/001-photos.sql:ro
+      - ./Demos/FeedServer/migrations/002-auth.sql:/docker-entrypoint-initdb.d/002-auth.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U earthquake -d earthquakes"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
 
-  earthquakes:
+  feed-server:
     build:
-        context: .
-        dockerfile: Dockerfile.earthquakes
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: swift run muttniks
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    command: ["swift", "run", "--skip-build", "feed-server"]
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 8080
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: earthquake
+      PGDATABASE: earthquakes
+    ports:
+      - "${FEED_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8080'"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  earthquakes-cli:
+    profiles: ["cli"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    entrypoint: ["swift", "run", "--skip-build", "earthquakes"]
+    stdin_open: true
+    tty: true
+
+  swift-build:
+    profiles: ["build"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    command: ["swift", "build"]
+
+  swift-tests:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    command: ["swift", "test"]
 
 volumes:
+  postgres-data:
   db-data:
   app-sbt-cache:
   app-coursier-cache:

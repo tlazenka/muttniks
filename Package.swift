@@ -6,41 +6,31 @@ import PackageDescription
 
 let package = Package(
     name: "Muttniks",
-    platforms: [.iOS(.v27), .tvOS(.v27), .watchOS(.v27), .macCatalyst(.v27), .macOS(.v26)],
+    platforms: [.iOS(.v18), .tvOS(.v18), .watchOS(.v11), .macCatalyst(.v18), .macOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Muttniks",
-            targets: ["Muttniks"]
-        ),
-        .library(
-            name: "MuttniksUIKit",
-            targets: ["MuttniksUIKit"]
-        ),
-        .library(
-            name: "MuttniksJSON",
-            targets: ["MuttniksJSON"]
-        ),
-        .executable(
-            name: "muttniks",
-            targets: ["MuttniksCLI"]
-        ),
-        .library(
             name: "StateBlaster",
             targets: ["StateBlaster"]
-        ),
-        .executable(
-            name: "StateBlasterClient",
-            targets: ["StateBlasterClient"]
         ),
         .library(
             name: "Do",
             targets: ["Do"]
         ),
         .library(
-            name: "ObservableUserDefaults",
-            targets: ["ObservableUserDefaults"]
+            name: "ScopedUserDefaults",
+            targets: ["ScopedUserDefaults"]
         ),
+        .library(name: "OnboardingFeature", targets: ["OnboardingFeature"]),
+        .library(name: "SQLiteJSONBlaster", targets: ["SQLiteJSONBlaster"]),
+        .library(name: "QueryBlaster", targets: ["QueryBlaster"]),
+        .library(name: "SemanticCore", targets: ["SemanticCore"]),
+        .library(name: "ScopedUserDefaults", targets: ["ScopedUserDefaults"]),
+        .library(name: "MuttniksStateMachines", targets: ["MuttniksStateMachines"]),
+        .library(name: "CBLinearHierarchy", targets: ["CBLinearHierarchy"]),
+        .library(name: "Do", targets: ["Do"]),
+        .executable(name: "earthquakes", targets: ["EarthquakesCLI"]),
+        .executable(name: "feed-server", targets: ["FeedServer"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "604.0.0-latest")
@@ -75,48 +65,17 @@ let package = Package(
         ),
         // Library that exposes a macro as part of its API, which is used in client programs.
         .target(
-            name: "Muttniks",
-            dependencies: ["MuttniksMacros", "MuttniksParsers", "CSQLite"],
+            name: "SQLiteJSONBlaster",
+            dependencies: [
+                "MuttniksMacros",
+                "MuttniksParsers",
+                "CSQLite",
+                "SemanticCore",
+                "QueryBlaster",
+            ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
-        ),
-        .target(
-            name: "MuttniksUIKit",
-            dependencies: [],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency")
-            ],
-        ),
-        .target(
-            name: "MuttniksJSON",
-            dependencies: ["Muttniks", "MuttniksParsers"],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency")
-            ],
-        ),
-
-        // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(
-            name: "MuttniksCLI",
-            dependencies: ["Muttniks"],
-            resources: [.copy("Resources")],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency")
-            ],
-        ),
-
-        // A test target used to develop the macro implementation.
-        .testTarget(
-            name: "MuttniksTests",
-            dependencies: ["Muttniks", "MuttniksParsers"],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency")
-            ],
-        ),
-
-        .target(
-            name: "StateBlasterPresentationParser"
         ),
         .macro(
             name: "StateBlasterMacros",
@@ -134,19 +93,6 @@ let package = Package(
                 .enableUpcomingFeature("ApproachableConcurrency"),
                 .defaultIsolation(.some(MainActor.self)),
 
-            ],
-        ),
-
-        // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(
-            name: "StateBlasterClient",
-            dependencies: [
-                "StateBlaster",
-                "Do",
-                "ObservableUserDefaults",
-            ],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency")
             ],
         ),
 
@@ -245,7 +191,7 @@ let package = Package(
             ],
         ),
         .macro(
-            name: "ObservableUserDefaultsMacros",
+            name: "ScopedUserDefaultsMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
@@ -254,8 +200,8 @@ let package = Package(
 
         // Library that exposes a macro as part of its API, which is used in client programs.
         .target(
-            name: "ObservableUserDefaults",
-            dependencies: ["ObservableUserDefaultsMacros"],
+            name: "ScopedUserDefaults",
+            dependencies: ["ScopedUserDefaultsMacros"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency")
             ],
@@ -263,10 +209,10 @@ let package = Package(
 
         // A test target used to develop the macro implementation.
         .testTarget(
-            name: "ObservableUserDefaultsTests",
+            name: "ScopedUserDefaultsTests",
             dependencies: [
-                "ObservableUserDefaults",
-                "ObservableUserDefaultsMacros",
+                "ScopedUserDefaults",
+                "ScopedUserDefaultsMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             swiftSettings: [
@@ -275,16 +221,71 @@ let package = Package(
             ],
         ),
         .testTarget(
-            name: "ObservableUserDefaultsMacrosTests",
+            name: "ScopedUserDefaultsMacrosTests",
             dependencies: [
-                "ObservableUserDefaults",
-                "ObservableUserDefaultsMacros",
+                "ScopedUserDefaults",
+                "ScopedUserDefaultsMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
                 .swiftLanguageMode(.v5),
             ],
+        ),
+        // Targets are the basic building blocks of a package, defining a module or a test suite.
+        // Targets can depend on other targets in this package and products from dependencies.
+        // Macro implementation that performs the source transformation of a macro.
+        .target(
+            name: "OnboardingFeature",
+            dependencies: [
+                "StateBlaster"
+            ]
+
+        ),
+        .testTarget(
+            name: "OnboardingFeatureTests",
+            dependencies: [
+                "OnboardingFeature",
+                "CSQLite",
+                "MuttniksStateMachines",
+            ],
+        ),
+        .target(name: "SemanticCore"),
+        .target(name: "CBLinearHierarchy"),
+
+        .macro(
+            name: "MuttniksStateMachineMacros",
+            dependencies: [
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftDiagnostics", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            ]
+        ),
+        .target(
+            name: "MuttniksStateMachines",
+            dependencies: ["MuttniksStateMachineMacros", "CSQLite", "SemanticCore"]
+        ),
+
+        .target(name: "QueryBlaster"),
+        .target(name: "PostgresBlaster", dependencies: ["QueryBlaster"]),
+        .executableTarget(
+            name: "FeedServer",
+            dependencies: ["QueryBlaster", "PostgresBlaster"],
+            path: "Demos/FeedServer"
+        ),
+        .executableTarget(
+            name: "EarthquakesCLI",
+            dependencies: ["SQLiteJSONBlaster"],
+            path: "Demos/EarthquakesCLI",
+            resources: [.copy("Resources/SampleData.json")]
+        ),
+
+        .testTarget(name: "SemanticCoreTests", dependencies: ["SemanticCore"]),
+        .testTarget(
+            name: "SQLiteJSONBlasterTests",
+            dependencies: ["SQLiteJSONBlaster", "MuttniksParsers", "QueryBlaster"]
         ),
     ],
     swiftLanguageModes: [.v5],

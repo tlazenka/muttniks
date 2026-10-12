@@ -58,9 +58,10 @@ public struct Parser<Output>: Sendable {
         _ transform: @escaping @Sendable (Output) -> T
     ) -> Parser<T> {
         Parser<T> { input in
-            self.parse(input).map { output, rest in
-                (transform(output), rest)
-            }
+            self.parse(input)
+                .map { output, rest in
+                    (transform(output), rest)
+                }
         }
     }
 
@@ -68,9 +69,10 @@ public struct Parser<Output>: Sendable {
         _ transform: @escaping @Sendable (Output) -> Parser<T>
     ) -> Parser<T> {
         Parser<T> { input in
-            self.parse(input).flatMap { output, rest in
-                transform(output).parse(rest)
-            }
+            self.parse(input)
+                .flatMap { output, rest in
+                    transform(output).parse(rest)
+                }
         }
     }
 }
