@@ -151,25 +151,27 @@ extension DataManagerTests {
                 let urlString = request.url?.absoluteString,
                 urlString.starts(with: "mock/api/users/check")
             {
-                data = try JSONEncoder().encode(
-                    [
-                        ApiGetUserResponse(
-                            id: UUID(uuidString: "EE6FF82C-6645-4B81-9160-1D7E3BA3C999")!,
-                            phoneNumber: "2",
-                            hashedPhoneNumber: "2",
-                            doorId: nil,
-                            customDoorId: nil,
-                            imageFilterNextAvailableDate: nil
-                        )
-                    ]
-                )
+                data = try JSONEncoder()
+                    .encode(
+                        [
+                            ApiGetUserResponse(
+                                id: UUID(uuidString: "EE6FF82C-6645-4B81-9160-1D7E3BA3C999")!,
+                                phoneNumber: "2",
+                                hashedPhoneNumber: "2",
+                                doorId: nil,
+                                customDoorId: nil,
+                                imageFilterNextAvailableDate: nil
+                            )
+                        ]
+                    )
             } else if request.httpMethod == "POST",
                 let urlString = request.url?.absoluteString,
                 urlString.starts(with: "mock/api/user")
             {
-                data = try JSONEncoder().encode(
-                    ApiPostUserResponse(id: UUID(uuidString: "EE6FF82C-6645-4B81-9160-1D7E3BA3C999")!)
-                )
+                data = try JSONEncoder()
+                    .encode(
+                        ApiPostUserResponse(id: UUID(uuidString: "EE6FF82C-6645-4B81-9160-1D7E3BA3C999")!)
+                    )
             } else {
                 data = Data()
                 XCTFail("Unexpected request")

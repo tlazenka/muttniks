@@ -7,11 +7,12 @@
     "indentation": {
         "spaces": 4
     },
-    "lineBreakAroundMultilineExpressionChainComponents": false,
+    "lineBreakAroundMultilineExpressionChainComponents": true,
     "lineBreakBeforeControlFlowKeywords": false,
     "lineBreakBeforeEachArgument": true,
-    "lineBreakBeforeEachGenericRequirement": false,
+    "lineBreakBeforeEachGenericRequirement": true,
     "lineBreakBetweenDeclarationAttributes": false,
+    "lineBreakBeforeEachCase": true,
     "lineLength": 120,
     "maximumBlankLines": 1,
     "multiElementCollectionTrailingCommas": true,
@@ -33,7 +34,7 @@
         "AlwaysUseLowerCamelCase": false,
         "AmbiguousTrailingClosureOverload": false,
         "BeginDocumentationCommentWithOneLineSummary": false,
-        "DoNotUseSemicolons": false,
+        "DoNotUseSemicolons": true,
         "DontRepeatTypeInStaticProperties": false,
         "FileScopedDeclarationPrivacy": true,
         "FullyIndirectEnum": true,

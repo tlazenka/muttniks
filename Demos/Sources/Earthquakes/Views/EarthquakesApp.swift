@@ -1,4 +1,4 @@
-import Muttniks
+import SQLiteJSONBlaster
 import SwiftUI
 
 @main
@@ -10,7 +10,7 @@ struct EarthquakesApp: App {
             let directory = URL.applicationSupportDirectory.appendingPathComponent("MuttniksDemo", isDirectory: true)
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             let database = try Database(path: directory.appendingPathComponent("SampleData.sqlite").path)
-            quakesProvider = try QuakesProvider(database: database)
+            quakesProvider = QuakesProvider(database: database)
         } catch {
             fatalError(error.localizedDescription)
         }

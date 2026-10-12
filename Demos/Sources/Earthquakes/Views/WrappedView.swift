@@ -26,9 +26,9 @@ struct WrappedView: View {
                     .padding()
                     .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8))
                 }
+                .padding(.horizontal)
             }
             .listStyle(.plain)
-            .padding()
             .navigationTitle("Scrubapped")
             .task {
                 refresh()
@@ -49,11 +49,13 @@ struct WrappedView: View {
     }
 
     func refresh() {
-        do {
-            insights = try analytics.wrapped()
-            error = nil
-        } catch {
-            self.error = error.localizedDescription
+        Task<Void, Never> { @MainActor in
+            do {
+                insights = try await analytics.wrapped()
+                error = nil
+            } catch {
+                self.error = error.localizedDescription
+            }
         }
     }
 }

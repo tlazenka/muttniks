@@ -43,18 +43,24 @@ func generateScopedStateAuthorityMachineWrapper(
     states: [StateDescription],
     access: String
 ) -> String {
-    let authorizers = states.filter { !$0.isTerminal }.map {
-        generateScopedStateAuthorityAuthorizer(for: $0, access: access)
-    }.joined(separator: "\n\n")
-    let accessors = states.filter { !$0.isTerminal }.map {
-        generateScopedAccessor(for: $0, access: access)
-    }.joined(separator: "\n\n")
-    let transitions = states.flatMap { source in
-        source.transitions.compactMap { name -> String? in
-            guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
-            return generateScopedStateAuthorityMachineTransition(from: source, to: destination, access: access)
+    let authorizers = states.filter { !$0.isTerminal }
+        .map {
+            generateScopedStateAuthorityAuthorizer(for: $0, access: access)
         }
-    }.joined(separator: "\n\n")
+        .joined(separator: "\n\n")
+    let accessors = states.filter { !$0.isTerminal }
+        .map {
+            generateScopedAccessor(for: $0, access: access)
+        }
+        .joined(separator: "\n\n")
+    let transitions =
+        states.flatMap { source in
+            source.transitions.compactMap { name -> String? in
+                guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
+                return generateScopedStateAuthorityMachineTransition(from: source, to: destination, access: access)
+            }
+        }
+        .joined(separator: "\n\n")
 
     return """
         \(access) struct Machine<Owner: AnyObject> {
@@ -149,14 +155,18 @@ func generateScopedStateAuthorityMachineTransition(
         required.isEmpty
         ? "(consume state).\(destination.caseName)()"
         : "(consume state).\(destination.caseName)(\(callArguments))"
-    let payloadBindings = destination.fields.map {
-        let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "let \(local) = next.\($0.name)"
-    }.joined(separator: "\n        ")
-    let payloadArguments = destination.fields.map {
-        let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "\($0.name): \(local)"
-    }.joined(separator: ", ")
+    let payloadBindings = destination.fields
+        .map {
+            let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "let \(local) = next.\($0.name)"
+        }
+        .joined(separator: "\n        ")
+    let payloadArguments = destination.fields
+        .map {
+            let local = "screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "\($0.name): \(local)"
+        }
+        .joined(separator: ", ")
     let screenSuffix = payloadArguments.isEmpty ? "" : ", \(payloadArguments)"
 
     return """

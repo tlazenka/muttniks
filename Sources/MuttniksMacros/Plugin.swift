@@ -9,7 +9,7 @@ import SwiftCompilerPlugin
 import SwiftSyntaxMacros
 
 @main
-struct MuttniksMacrosPlugin: CompilerPlugin {
+struct SQLiteJSONMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         JSONPathMacro.self
     ]

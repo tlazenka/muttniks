@@ -40,9 +40,10 @@ public enum JSONPathParser {
         const("[")
         .flatMap { _ in digits }
         .flatMap { digits in
-            const("]").map { _ in
-                JSONPathComponent.index(Int(digits)!)
-            }
+            const("]")
+                .map { _ in
+                    JSONPathComponent.index(Int(digits)!)
+                }
         }
 
     static let fromEnd =
@@ -51,9 +52,10 @@ public enum JSONPathParser {
         .flatMap { _ in const("-") }
         .flatMap { _ in digits }
         .flatMap { digits in
-            const("]").map { _ in
-                JSONPathComponent.fromEnd(Int(digits)!)
-            }
+            const("]")
+                .map { _ in
+                    JSONPathComponent.fromEnd(Int(digits)!)
+                }
         }
 
     static let append =
@@ -75,14 +77,15 @@ public enum JSONPathParser {
         .map(ParsedJSONPath.init)
 
     public static func parse(_ source: String) -> Result<ParsedJSONPath, ParseError> {
-        path.parse(CharStream(source)).flatMap { value, rest in
-            guard rest.isAtEnd else {
-                return .failure(
-                    ParseError(offset: rest.offset, expected: "JSONPath component")
-                )
+        path.parse(CharStream(source))
+            .flatMap { value, rest in
+                guard rest.isAtEnd else {
+                    return .failure(
+                        ParseError(offset: rest.offset, expected: "JSONPath component")
+                    )
+                }
+                return .success(value)
             }
-            return .success(value)
-        }
     }
 }
 

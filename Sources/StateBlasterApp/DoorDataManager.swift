@@ -11,7 +11,8 @@ import Foundation
 
 public final class DoorDataManager<Credential, SignInResult, APNSTokenType, AuthenticatorType>
 where
-    AuthenticatorType: DoorAuthenticator, AuthenticatorType.GetCredentialResult == Credential,
+    AuthenticatorType: DoorAuthenticator,
+    AuthenticatorType.GetCredentialResult == Credential,
     AuthenticatorType.APNSTokenType == APNSTokenType
 {
     public let userDefaults: UserDefaults
