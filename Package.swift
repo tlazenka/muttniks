@@ -25,12 +25,15 @@ let package = Package(
         .library(name: "SQLiteJSONBlaster", targets: ["SQLiteJSONBlaster"]),
         .library(name: "QueryBlaster", targets: ["QueryBlaster"]),
         .library(name: "SemanticCore", targets: ["SemanticCore"]),
-        .library(name: "ScopedUserDefaults", targets: ["ScopedUserDefaults"]),
         .library(name: "MuttniksStateMachines", targets: ["MuttniksStateMachines"]),
         .library(name: "CBLinearHierarchy", targets: ["CBLinearHierarchy"]),
-        .library(name: "Do", targets: ["Do"]),
+        .library(name: "WhaleyCore", targets: ["WhaleyCore"]),
+        .library(name: "WhaleyObjectiveC", targets: ["WhaleyObjectiveC"]),
+        .library(name: "WhaleySpriteKit", targets: ["WhaleySpriteKit"]),
         .executable(name: "earthquakes", targets: ["EarthquakesCLI"]),
         .executable(name: "feed-server", targets: ["FeedServer"]),
+        .executable(name: "whaley", targets: ["WhaleyCLI"]),
+        .executable(name: "whaley-relay", targets: ["WhaleyRelay"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "604.0.0-latest")
@@ -270,11 +273,43 @@ let package = Package(
 
         .target(name: "QueryBlaster"),
         .target(name: "PostgresBlaster", dependencies: ["QueryBlaster"]),
+        .target(
+            name: "WhaleySpriteKit",
+            dependencies: ["WhaleyCore", "WhaleyObjectiveC"],
+            resources: [.process("Resources")]
+        ),
+        .target(
+            name: "WhaleyObjectiveC",
+            path: "Sources/WhaleyObjectiveC",
+            publicHeadersPath: "include",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("src"),
+                .unsafeFlags(["-fno-objc-arc"]),
+            ],
+            linkerSettings: [.linkedFramework("SpriteKit"), .linkedFramework("UIKit"), .linkedLibrary("z")]
+        ),
+        .target(
+            name: "WhaleyCore",
+            dependencies: ["SemanticCore", "CSQLite", "QueryBlaster", "MuttniksStateMachines"]
+        ),
+
         .executableTarget(
             name: "FeedServer",
             dependencies: ["QueryBlaster", "PostgresBlaster"],
             path: "Demos/FeedServer"
         ),
+        .executableTarget(
+            name: "WhaleyCLI",
+            dependencies: ["WhaleyCore"],
+            path: "Demos/WhaleyCLI",
+        ),
+        .executableTarget(
+            name: "WhaleyRelay",
+            dependencies: ["WhaleyCore"],
+            path: "Demos/WhaleyRelay",
+        ),
+
         .executableTarget(
             name: "EarthquakesCLI",
             dependencies: ["SQLiteJSONBlaster"],
@@ -287,6 +322,7 @@ let package = Package(
             name: "SQLiteJSONBlasterTests",
             dependencies: ["SQLiteJSONBlaster", "MuttniksParsers", "QueryBlaster"]
         ),
+        .testTarget(name: "WhaleyCoreTests", dependencies: ["WhaleyCore"]),
     ],
     swiftLanguageModes: [.v5],
 )
