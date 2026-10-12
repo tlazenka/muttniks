@@ -1,0 +1,9 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ObjCBlockIndentWidth: 4
+ColumnLimit: 0
+BreakBeforeBinaryOperators: NonAssignment
+DerivePointerAlignment: false
+PointerAlignment: Right
+ObjCSpaceAfterProperty: true
+InsertBraces: true

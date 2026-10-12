@@ -34,6 +34,10 @@ test:
 .PHONY: format
 format:
 	swift format --in-place --recursive . 
+
+.PHONY: format-objc
+format-objc:
+	find . -type f \( -name '*.h' -o -name '*.m' \) -exec clang-format -i {} +
 	
 .PHONY: test-docker
 test-docker:

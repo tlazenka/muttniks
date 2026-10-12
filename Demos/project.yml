@@ -26,6 +26,25 @@ targetTemplates:
         GENERATE_INFOPLIST_FILE: YES
 
 targets:
+  Whaley:
+    templates: [iOSDemo]
+    sources:
+      - path: ./Whaley
+        excludes: [Resources, Cocos2dCompatibility]
+    dependencies:
+      - package: Muttniks
+        product: WhaleyObjectiveC
+      - package: Muttniks
+        product: WhaleySpriteKit
+      - package: Muttniks
+        product: WhaleyCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.muttniks.whaley
+        INFOPLIST_KEY_CFBundleDisplayName: Whaley
+        GCC_NO_COMMON_BLOCKS: "NO"
+        OTHER_LDFLAGS: "$(inherited) -lz"
+
   Earthquakes:
     templates: [iOSDemo]
     sources:
@@ -69,4 +88,5 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: OnboardingStick        
 
 schemes:
+  Whaley: {build: {targets: {Whaley: all}}, run: {config: Debug}}
   Earthquakes: {build: {targets: {Earthquakes: all}}, run: {config: Debug}}

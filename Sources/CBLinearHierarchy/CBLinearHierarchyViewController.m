@@ -10,15 +10,25 @@
 
 #import "CBLinearHierarchyViewController.h"
 
-
 @interface CBAdjustableListCell : UICollectionViewListCell
 @property (nonatomic, copy, nullable) void (^adjustHandler)(NSInteger direction);
 @end
 
 @implementation CBAdjustableListCell
-- (void)accessibilityIncrement { if (self.adjustHandler) self.adjustHandler(1); }
-- (void)accessibilityDecrement { if (self.adjustHandler) self.adjustHandler(-1); }
-- (void)prepareForReuse { [super prepareForReuse]; self.adjustHandler = nil; }
+- (void)accessibilityIncrement {
+    if (self.adjustHandler) {
+        self.adjustHandler(1);
+    }
+}
+- (void)accessibilityDecrement {
+    if (self.adjustHandler) {
+        self.adjustHandler(-1);
+    }
+}
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.adjustHandler = nil;
+}
 @end
 
 @interface CBLinearHierarchyViewController () <UICollectionViewDelegate, UIGestureRecognizerDelegate>
@@ -37,14 +47,16 @@
 
 - (instancetype)initWithRootNode:(id<CBHierarchyNode>)rootNode {
     self = [super initWithNibName:nil bundle:nil];
-    if (self) _rootNode = rootNode;
+    if (self) {
+        _rootNode = rootNode;
+    }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
-                                              collectionViewLayout:[self makeLayout]];
+                                             collectionViewLayout:[self makeLayout]];
     self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
     self.collectionView.backgroundColor = UIColor.systemBackgroundColor;
     self.collectionView.delegate = self;
@@ -60,7 +72,8 @@
     [self configureDataSource];
 
     UIPanGestureRecognizer *scrub =
-        [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
+        [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                action:@selector(handleScrub:)];
     scrub.delegate = self;
     scrub.maximumNumberOfTouches = 1;
     [self.collectionView addGestureRecognizer:scrub];
@@ -80,83 +93,88 @@
 - (void)configureDataSource {
     UICollectionViewCellRegistration *registration =
         [UICollectionViewCellRegistration registrationWithCellClass:CBAdjustableListCell.class
-        configurationHandler:^(UICollectionViewListCell *cell, NSIndexPath *indexPath, NSString *identifier) {
-            id<CBHierarchyNode> node = self.nodesByID[identifier];
-            NSInteger depth = [self.depthByID[identifier] integerValue];
-            UIListContentConfiguration *content = [UIListContentConfiguration subtitleCellConfiguration];
-            content.text = node.title;
-            if (node.markerText.length > 0) {
-                content.secondaryText = [NSString stringWithFormat:@"%@   [%@]",
-                                         node.subtitle ?: @"",
-                                         node.markerText];
-                content.secondaryTextProperties.color = UIColor.systemIndigoColor;
-                content.secondaryTextProperties.font =
-                    [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-            } else {
-                content.secondaryText = node.subtitle;
-                content.secondaryTextProperties.color = UIColor.secondaryLabelColor;
-            }
-            content.directionalLayoutMargins =
-                NSDirectionalEdgeInsetsMake(5, 12 + (depth * 20), 5, 12);
-            cell.contentConfiguration = content;
-            CBAdjustableListCell *adjustableCell = (CBAdjustableListCell *)cell;
-            if (node.isAdjustable) {
-                adjustableCell.accessibilityTraits |= UIAccessibilityTraitAdjustable;
-                adjustableCell.accessibilityLabel = node.title;
-                adjustableCell.accessibilityValue = node.accessibilityFilterValue ?: node.subtitle;
-                adjustableCell.accessibilityHint = @"Swipe up or down to adjust this filter";
-                __weak typeof(self) weakSelf = self;
-                adjustableCell.adjustHandler = ^(NSInteger direction) {
-                    __strong typeof(weakSelf) self = weakSelf;
-                    if (!self) return;
-                    [self.delegate linearHierarchyViewController:self didAdjustNode:node direction:direction];
-                };
-            } else {
-                adjustableCell.accessibilityTraits &= ~UIAccessibilityTraitAdjustable;
-                adjustableCell.adjustHandler = nil;
-                adjustableCell.accessibilityHint = nil;
-                adjustableCell.accessibilityValue = node.subtitle;
-                adjustableCell.accessibilityLabel = node.title;
-            }
-            UIBackgroundConfiguration *background = [UIBackgroundConfiguration listPlainCellConfiguration];
-            background.backgroundColor = node.children.count == 0
-                ? UIColor.secondarySystemBackgroundColor : UIColor.clearColor;
-            cell.backgroundConfiguration = background;
-        }];
+                                               configurationHandler:^(UICollectionViewListCell *cell, NSIndexPath *indexPath, NSString *identifier) {
+                                                   id<CBHierarchyNode> node = self.nodesByID[identifier];
+                                                   NSInteger depth = [self.depthByID[identifier] integerValue];
+                                                   UIListContentConfiguration *content = [UIListContentConfiguration subtitleCellConfiguration];
+                                                   content.text = node.title;
+                                                   if (node.markerText.length > 0) {
+                                                       content.secondaryText = [NSString stringWithFormat:@"%@   [%@]",
+                                                                                                          node.subtitle ?: @"",
+                                                                                                          node.markerText];
+                                                       content.secondaryTextProperties.color = UIColor.systemIndigoColor;
+                                                       content.secondaryTextProperties.font =
+                                                           [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+                                                   } else {
+                                                       content.secondaryText = node.subtitle;
+                                                       content.secondaryTextProperties.color = UIColor.secondaryLabelColor;
+                                                   }
+                                                   content.directionalLayoutMargins =
+                                                       NSDirectionalEdgeInsetsMake(5, 12 + (depth * 20), 5, 12);
+                                                   cell.contentConfiguration = content;
+                                                   CBAdjustableListCell *adjustableCell = (CBAdjustableListCell *)cell;
+                                                   if (node.isAdjustable) {
+                                                       adjustableCell.accessibilityTraits |= UIAccessibilityTraitAdjustable;
+                                                       adjustableCell.accessibilityLabel = node.title;
+                                                       adjustableCell.accessibilityValue = node.accessibilityFilterValue ?: node.subtitle;
+                                                       adjustableCell.accessibilityHint = @"Swipe up or down to adjust this filter";
+                                                       __weak typeof(self) weakSelf = self;
+                                                       adjustableCell.adjustHandler = ^(NSInteger direction) {
+                                                           __strong typeof(weakSelf) self = weakSelf;
+                                                           if (!self) {
+                                                               return;
+                                                           }
+                                                           [self.delegate linearHierarchyViewController:self didAdjustNode:node direction:direction];
+                                                       };
+                                                   } else {
+                                                       adjustableCell.accessibilityTraits &= ~UIAccessibilityTraitAdjustable;
+                                                       adjustableCell.adjustHandler = nil;
+                                                       adjustableCell.accessibilityHint = nil;
+                                                       adjustableCell.accessibilityValue = node.subtitle;
+                                                       adjustableCell.accessibilityLabel = node.title;
+                                                   }
+                                                   UIBackgroundConfiguration *background = [UIBackgroundConfiguration listPlainCellConfiguration];
+                                                   background.backgroundColor = node.children.count == 0
+                                                                                    ? UIColor.secondarySystemBackgroundColor
+                                                                                    : UIColor.clearColor;
+                                                   cell.backgroundConfiguration = background;
+                                               }];
 
     self.dataSource =
         [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView
-        cellProvider:^UICollectionViewCell *(UICollectionView *collectionView, NSIndexPath *indexPath, NSString *identifier) {
-            return [collectionView dequeueConfiguredReusableCellWithRegistration:registration
-                                                                     forIndexPath:indexPath
-                                                                             item:identifier];
-        }];
+                                                              cellProvider:^UICollectionViewCell *(UICollectionView *collectionView, NSIndexPath *indexPath, NSString *identifier) {
+                                                                  return [collectionView dequeueConfiguredReusableCellWithRegistration:registration
+                                                                                                                          forIndexPath:indexPath
+                                                                                                                                  item:identifier];
+                                                              }];
 
     UICollectionViewSupplementaryRegistration *headerRegistration =
         [UICollectionViewSupplementaryRegistration
-         registrationWithSupplementaryClass:UICollectionViewListCell.class
-         elementKind:UICollectionElementKindSectionHeader
-         configurationHandler:^(UICollectionViewListCell *header, NSString *kind, NSIndexPath *indexPath) {
-            NSString *sectionID = self.sectionIDs[indexPath.section];
-            UIListContentConfiguration *content = [UIListContentConfiguration groupedHeaderConfiguration];
-            content.text = self.titlesBySection[sectionID] ?: sectionID;
-            header.contentConfiguration = content;
-            UIBackgroundConfiguration *background = [UIBackgroundConfiguration listPlainHeaderFooterConfiguration];
-            background.backgroundColor = UIColor.systemBackgroundColor;
-            header.backgroundConfiguration = background;
-        }];
+            registrationWithSupplementaryClass:UICollectionViewListCell.class
+                                   elementKind:UICollectionElementKindSectionHeader
+                          configurationHandler:^(UICollectionViewListCell *header, NSString *kind, NSIndexPath *indexPath) {
+                              NSString *sectionID = self.sectionIDs[indexPath.section];
+                              UIListContentConfiguration *content = [UIListContentConfiguration groupedHeaderConfiguration];
+                              content.text = self.titlesBySection[sectionID] ?: sectionID;
+                              header.contentConfiguration = content;
+                              UIBackgroundConfiguration *background = [UIBackgroundConfiguration listPlainHeaderFooterConfiguration];
+                              background.backgroundColor = UIColor.systemBackgroundColor;
+                              header.backgroundConfiguration = background;
+                          }];
 
     self.dataSource.supplementaryViewProvider =
         ^UICollectionReusableView *(UICollectionView *collectionView, NSString *kind, NSIndexPath *indexPath) {
             return [collectionView dequeueConfiguredReusableSupplementaryViewWithRegistration:headerRegistration
-                                                                                  forIndexPath:indexPath];
+                                                                                 forIndexPath:indexPath];
         };
 }
 
 - (void)setRootNode:(id<CBHierarchyNode>)rootNode animated:(BOOL)animated {
     _rootNode = rootNode;
     [self refresh];
-    if (self.isViewLoaded) [self applySnapshotAnimated:animated];
+    if (self.isViewLoaded) {
+        [self applySnapshotAnimated:animated];
+    }
 }
 
 - (void)refresh {
@@ -168,8 +186,13 @@
 
     id<CBHierarchyNode> collection = nil;
     for (id<CBHierarchyNode> child in self.rootNode.children) {
-        if ([child.title isEqualToString:@"items"]) { collection = child; break; }
-        if (!collection && [child.title isEqualToString:@"features"]) { collection = child; }
+        if ([child.title isEqualToString:@"items"]) {
+            collection = child;
+            break;
+        }
+        if (!collection && [child.title isEqualToString:@"features"]) {
+            collection = child;
+        }
     }
 
     if (collection) {
@@ -215,18 +238,22 @@
     [snapshot appendSectionsWithIdentifiers:self.sectionIDs];
     for (NSString *sectionID in self.sectionIDs) {
         [snapshot appendItemsWithIdentifiers:self.itemsBySection[sectionID] ?: @[]
-                       intoSectionWithIdentifier:sectionID];
+                   intoSectionWithIdentifier:sectionID];
     }
     [self.dataSource applySnapshot:snapshot animatingDifferences:animated];
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gesture {
     CGPoint velocity = [gesture velocityInView:self.collectionView];
-    if (fabs(velocity.x) <= fabs(velocity.y)) return NO;
+    if (fabs(velocity.x) <= fabs(velocity.y)) {
+        return NO;
+    }
 
     CGPoint location = [gesture locationInView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    if (!indexPath) return NO;
+    if (!indexPath) {
+        return NO;
+    }
     NSString *identifier = [self.dataSource itemIdentifierForIndexPath:indexPath];
     id<CBHierarchyNode> node = self.nodesByID[identifier];
     return node != nil && node.children.count == 0;
@@ -236,24 +263,26 @@
     if (gesture.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [gesture locationInView:self.collectionView];
         NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-        if (!indexPath) return;
+        if (!indexPath) {
+            return;
+        }
         NSString *identifier = [self.dataSource itemIdentifierForIndexPath:indexPath];
         self.scrubNode = self.nodesByID[identifier];
     }
 
     id<CBHierarchyNode> node = self.scrubNode;
-    if (!node) return;
+    if (!node) {
+        return;
+    }
 
     CGFloat translationX = [gesture translationInView:self.collectionView].x;
     [self.delegate linearHierarchyViewController:self
                                     didScrubNode:node
-                                   translationX:translationX
-                                     touchPoint:[gesture locationInView:nil]
-                                          state:gesture.state];
+                                    translationX:translationX
+                                      touchPoint:[gesture locationInView:nil]
+                                           state:gesture.state];
 
-    if (gesture.state == UIGestureRecognizerStateEnded ||
-        gesture.state == UIGestureRecognizerStateCancelled ||
-        gesture.state == UIGestureRecognizerStateFailed) {
+    if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateFailed) {
         self.scrubNode = nil;
     }
 }

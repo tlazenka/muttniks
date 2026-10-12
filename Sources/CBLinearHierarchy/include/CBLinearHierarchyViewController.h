@@ -28,15 +28,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol CBLinearHierarchyViewControllerDelegate <NSObject>
 - (void)linearHierarchyViewController:(CBLinearHierarchyViewController *)viewController
-                       didSelectNode:(id<CBHierarchyNode>)node;
+                        didSelectNode:(id<CBHierarchyNode>)node;
 - (void)linearHierarchyViewController:(CBLinearHierarchyViewController *)viewController
-                  didScrubNode:(id<CBHierarchyNode>)node
-                 translationX:(CGFloat)translationX
-                    touchPoint:(CGPoint)touchPoint
-                        state:(UIGestureRecognizerState)state;
+                         didScrubNode:(id<CBHierarchyNode>)node
+                         translationX:(CGFloat)translationX
+                           touchPoint:(CGPoint)touchPoint
+                                state:(UIGestureRecognizerState)state;
 - (void)linearHierarchyViewController:(CBLinearHierarchyViewController *)viewController
-                 didAdjustNode:(id<CBHierarchyNode>)node
-                     direction:(NSInteger)direction;
+                        didAdjustNode:(id<CBHierarchyNode>)node
+                            direction:(NSInteger)direction;
 @end
 
 @interface CBLinearHierarchyViewController : UIViewController

@@ -188,6 +188,31 @@ services:
     stdin_open: true
     tty: true
 
+  whaley-relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    command: ["swift", "run", "--skip-build", "whaley-relay"]
+    environment:
+      WHALEY_RELAY_PORT: "8092"
+    ports:
+      - "${WHALEY_RELAY_PORT:-8092}:8092"
+    restart: unless-stopped
+
+  whaley-cli:
+    profiles: ["cli"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    entrypoint: ["swift", "run", "--skip-build", "whaley"]
+    environment:
+      WHALEY_RELAY_HOST: whaley-relay
+      WHALEY_RELAY_PORT: "8092"
+    stdin_open: true
+    tty: true
+
   swift-build:
     profiles: ["build"]
     build:
