@@ -4,9 +4,8 @@ import SwiftUI
 struct WhaleyApp: App {
     var body: some Scene {
         WindowGroup {
-            SrcWhaleyView { _, view in
-            }
-            .background(.black)
+            WhaleyHostView()
+                .background(.black)
         }
     }
 }

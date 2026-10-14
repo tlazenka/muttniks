@@ -286,6 +286,12 @@ final class SrcWhaleySKView: SKView {
     @objc func updateSemanticClock() {
         designerProjection?(.zero, self)
         let adventureTime = WhaleySrcGameTime()
+        WhaleyRunRecorder.shared.sample(
+            level: WhaleySrcCurrentLevelNumber(),
+            time: adventureTime,
+            position: WhaleySrcPlayerPosition(),
+            dead: WhaleySrcAdventurePlayerIsDead()
+        )
         publishCLIPositionIfNeeded()
         guard clockScrub == nil else { return }
         let live = SceneGameTime.seconds(WhaleySrcGameTime())
@@ -338,24 +344,28 @@ final class SrcWhaleySKView: SKView {
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            WhaleyRunRecorder.shared.input(.began, time: WhaleySrcGameTime(), point: touch.location(in: self))
             _ = WhaleySrcTouchBegan(touch, event)
         }
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            WhaleyRunRecorder.shared.input(.moved, time: WhaleySrcGameTime(), point: touch.location(in: self))
             WhaleySrcTouchMoved(touch, event)
         }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            WhaleyRunRecorder.shared.input(.ended, time: WhaleySrcGameTime(), point: touch.location(in: self))
             WhaleySrcTouchEnded(touch, event)
         }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            WhaleyRunRecorder.shared.input(.cancelled, time: WhaleySrcGameTime(), point: touch.location(in: self))
             WhaleySrcTouchCancelled(touch, event)
         }
     }

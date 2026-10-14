@@ -2,6 +2,52 @@ import CSQLite
 import Foundation
 import SemanticCore
 
+public struct SceneEntityID: RawRepresentable, Hashable, Sendable, Codable {
+    public let rawValue: Int64
+    public init(rawValue: Int64) { self.rawValue = rawValue }
+}
+
+public enum SceneEntityKind: String, CaseIterable, Sendable, Codable {
+    case platform, bubble, flame, coin, goal
+}
+
+public enum SceneValue: Hashable, Sendable, Codable {
+    case number(Double)
+    case integer(Int64)
+    case text(String)
+    case flag(Bool)
+
+    public var displayText: String {
+        switch self {
+        case .number(let value): String(format: "%.1f", value)
+        case .integer(let value): "\(value)"
+        case .text(let value): value
+        case .flag(let value): value ? "yes" : "no"
+        }
+    }
+}
+
+public struct SceneEntity: Identifiable, Hashable, Sendable {
+    public let id: SceneEntityID
+    public var kind: SceneEntityKind
+    public var x: Double
+    public var y: Double
+    public init(id: SceneEntityID, kind: SceneEntityKind, x: Double, y: Double) {
+        self.id = id
+        self.kind = kind
+        self.x = x
+        self.y = y
+    }
+}
+
+public struct SceneEdit: Identifiable, Hashable, Sendable {
+    public let id: Int64
+    public let entityID: SceneEntityID
+    public let path: String
+    public let oldValue: SceneValue?
+    public let newValue: SceneValue
+}
+
 public struct SceneGameTime: Hashable, Comparable, Sendable, Codable {
     public let microseconds: Int64
     public init(microseconds: Int64) { self.microseconds = max(0, microseconds) }
