@@ -32,12 +32,14 @@ func generateWitnessMachineWrapper(
     states: [StateDescription],
     access: String
 ) -> String {
-    let transitionFactories = states.flatMap { source in
-        source.transitions.compactMap { name -> String? in
-            guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
-            return generateWitnessTransitionFactory(from: source, to: destination, access: access)
+    let transitionFactories =
+        states.flatMap { source in
+            source.transitions.compactMap { name -> String? in
+                guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
+                return generateWitnessTransitionFactory(from: source, to: destination, access: access)
+            }
         }
-    }.joined(separator: "\n\n")
+        .joined(separator: "\n\n")
 
     return """
         \(access) struct Machine<Owner: AnyObject> {
@@ -82,14 +84,18 @@ func generateWitnessTransitionFactory(
     let callArguments = required.isEmpty ? "" : argumentList(for: required)
     let transitionCall =
         required.isEmpty ? "source.\(destination.caseName)()" : "source.\(destination.caseName)(\(callArguments))"
-    let payloadBindings = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "let \(local) = next.\($0.name)"
-    }.joined(separator: "\n                ")
-    let payloadArguments = destination.fields.map {
-        let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
-        return "\($0.name): \(local)"
-    }.joined(separator: ", ")
+    let payloadBindings = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "let \(local) = next.\($0.name)"
+        }
+        .joined(separator: "\n                ")
+    let payloadArguments = destination.fields
+        .map {
+            let local = "next\($0.name.prefix(1).uppercased() + $0.name.dropFirst())"
+            return "\($0.name): \(local)"
+        }
+        .joined(separator: ", ")
     let destinationSuffix = payloadArguments.isEmpty ? "" : ", \(payloadArguments)"
 
     return """

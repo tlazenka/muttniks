@@ -1,5 +1,5 @@
 import Foundation
-import Puzzola
+import SQLiteJSONBlaster
 
 struct FieldMarker: Equatable {
     let label: String
@@ -15,9 +15,12 @@ struct WrappedInsight: Identifiable {
 final class AnalyticsStore: @unchecked Sendable {
     let database: Database
 
-    init(database: Database) throws {
+    init(database: Database) {
         self.database = database
-        try database.execute(
+    }
+
+    func prepare() async throws {
+        try await database.execute(
             """
             CREATE TABLE IF NOT EXISTS analytics (
                 id INTEGER PRIMARY KEY,
@@ -35,16 +38,19 @@ final class AnalyticsStore: @unchecked Sendable {
             let json = String(data: data, encoding: .utf8)
         else { return }
 
-        try? database.execute(
-            """
-            INSERT INTO analytics(occurred_at, event, properties)
-            VALUES (\(Date().timeIntervalSince1970), \(event), \(json))
-            """
-        )
+        let occurredAt = Date().timeIntervalSince1970
+        Task { [database] in
+            try? await database.execute(
+                """
+                INSERT INTO analytics(occurred_at, event, properties)
+                    VALUES (\(occurredAt), \(event), \(json))
+                """
+            )
+        }
     }
 
-    func fieldMarkers() throws -> [String: FieldMarker] {
-        let rows = try database.query(
+    func fieldMarkers() async throws -> [String: FieldMarker] {
+        let rows = try await database.query(
             """
             WITH completed AS (
               SELECT id, occurred_at,
@@ -105,8 +111,8 @@ final class AnalyticsStore: @unchecked Sendable {
         return result
     }
 
-    func suggestionScores() throws -> [String: Int] {
-        let rows = try database.query(
+    func suggestionScores() async throws -> [String: Int] {
+        let rows = try await database.query(
             """
             WITH completed AS (
               SELECT id, occurred_at,
@@ -136,8 +142,8 @@ final class AnalyticsStore: @unchecked Sendable {
         return Dictionary(uniqueKeysWithValues: rows.filter { !$0.0.isEmpty })
     }
 
-    func nextFieldScores(after path: String) throws -> [String: Int] {
-        let rows = try database.query(
+    func nextFieldScores(after path: String) async throws -> [String: Int] {
+        let rows = try await database.query(
             """
             WITH committed AS (
               SELECT id, occurred_at,
@@ -175,17 +181,19 @@ final class AnalyticsStore: @unchecked Sendable {
         return Dictionary(uniqueKeysWithValues: rows.filter { !$0.0.isEmpty })
     }
 
-    func wrapped() throws -> [WrappedInsight] {
+    func wrapped() async throws -> [WrappedInsight] {
         var result: [WrappedInsight] = []
 
         let totalScrubs =
-            try database.query(
+            try await database
+            .query(
                 """
                 SELECT COUNT(*)
                 FROM analytics
                 WHERE event = 'filter_finished'
                 """
-            ) { row in row.int(at: 0) }.first ?? 0
+            ) { row in row.int(at: 0) }
+            .first ?? 0
         result.append(
             .init(
                 id: "totalScrubs",
@@ -196,27 +204,29 @@ final class AnalyticsStore: @unchecked Sendable {
 
         )
 
-        let favoriteFilterField = try database.query(
-            """
-            WITH counts AS (
-              SELECT json_extract(properties, '$.path') AS path, COUNT(*) AS uses
-              FROM analytics
-              WHERE event = 'filter_finished'
-              GROUP BY path
-            ),
-            ranked AS (
-              SELECT path, uses,
-                     RANK() OVER (ORDER BY uses DESC) AS popularity_rank
-              FROM counts
-            )
-            SELECT path, uses FROM ranked
-            WHERE popularity_rank = 1
-            ORDER BY path
-            LIMIT 1
-            """
-        ) { row in
-            (row.string(at: 0) ?? "—", row.int(at: 1))
-        }.first
+        let favoriteFilterField =
+            try await database.query(
+                """
+                WITH counts AS (
+                  SELECT json_extract(properties, '$.path') AS path, COUNT(*) AS uses
+                  FROM analytics
+                  WHERE event = 'filter_finished'
+                  GROUP BY path
+                ),
+                ranked AS (
+                  SELECT path, uses,
+                         RANK() OVER (ORDER BY uses DESC) AS popularity_rank
+                  FROM counts
+                )
+                SELECT path, uses FROM ranked
+                WHERE popularity_rank = 1
+                ORDER BY path
+                LIMIT 1
+                """
+            ) { row in
+                (row.string(at: 0) ?? "—", row.int(at: 1))
+            }
+            .first
         if let favoriteFilterField {
             result.append(
                 .init(
@@ -228,22 +238,24 @@ final class AnalyticsStore: @unchecked Sendable {
             )
         }
 
-        let medianResultCount = try database.query(
-            """
-            WITH ordered AS (
-              SELECT CAST(json_extract(properties, '$.resultsAfter') AS INTEGER) AS result_count,
-                     ROW_NUMBER() OVER (
-                       ORDER BY CAST(json_extract(properties, '$.resultsAfter') AS INTEGER)
-                     ) AS row_number,
-                     COUNT(*) OVER () AS total
-              FROM analytics
-              WHERE event = 'filter_finished'
-            )
-            SELECT AVG(result_count)
-            FROM ordered
-            WHERE row_number IN ((total + 1) / 2, (total + 2) / 2)
-            """
-        ) { row in row.double(at: 0) }.first
+        let medianResultCount =
+            try await database.query(
+                """
+                WITH ordered AS (
+                  SELECT CAST(json_extract(properties, '$.resultsAfter') AS INTEGER) AS result_count,
+                         ROW_NUMBER() OVER (
+                           ORDER BY CAST(json_extract(properties, '$.resultsAfter') AS INTEGER)
+                         ) AS row_number,
+                         COUNT(*) OVER () AS total
+                  FROM analytics
+                  WHERE event = 'filter_finished'
+                )
+                SELECT AVG(result_count)
+                FROM ordered
+                WHERE row_number IN ((total + 1) / 2, (total + 2) / 2)
+                """
+            ) { row in row.double(at: 0) }
+            .first
         if let medianResultCount {
             result.append(
                 .init(
@@ -255,24 +267,26 @@ final class AnalyticsStore: @unchecked Sendable {
             )
         }
 
-        let effectiveFilter = try database.query(
-            """
-            WITH ranked AS (
-              SELECT json_extract(properties, '$.description') AS description,
-                     CAST(json_extract(properties, '$.resultsAfter') AS INTEGER) AS result_count,
-                     ROW_NUMBER() OVER (
-                       ORDER BY CAST(json_extract(properties, '$.resultsAfter') AS INTEGER), id
-                     ) AS selectivity_rank
-              FROM analytics
-              WHERE event = 'filter_finished'
-            )
-            SELECT description, result_count
-            FROM ranked
-            WHERE selectivity_rank = 1
-            """
-        ) { row in
-            (row.string(at: 0) ?? "—", row.int(at: 1))
-        }.first
+        let effectiveFilter =
+            try await database.query(
+                """
+                WITH ranked AS (
+                  SELECT json_extract(properties, '$.description') AS description,
+                         CAST(json_extract(properties, '$.resultsAfter') AS INTEGER) AS result_count,
+                         ROW_NUMBER() OVER (
+                           ORDER BY CAST(json_extract(properties, '$.resultsAfter') AS INTEGER), id
+                         ) AS selectivity_rank
+                  FROM analytics
+                  WHERE event = 'filter_finished'
+                )
+                SELECT description, result_count
+                FROM ranked
+                WHERE selectivity_rank = 1
+                """
+            ) { row in
+                (row.string(at: 0) ?? "—", row.int(at: 1))
+            }
+            .first
         if let effectiveFilter {
             result.append(
                 .init(
@@ -284,45 +298,47 @@ final class AnalyticsStore: @unchecked Sendable {
             )
         }
 
-        let sessionSummary = try database.query(
-            """
-            WITH ordered AS (
-              SELECT id, occurred_at,
-                     LAG(occurred_at) OVER (ORDER BY occurred_at, id) AS previous_at
-              FROM analytics
-            ),
-            boundaries AS (
-              SELECT id, occurred_at,
-                     CASE
-                       WHEN previous_at IS NULL OR occurred_at - previous_at > 1800
-                       THEN 1 ELSE 0
-                     END AS starts_session
-              FROM ordered
-            ),
-            sessionized AS (
-              SELECT id, occurred_at,
-                     SUM(starts_session) OVER (
-                       ORDER BY occurred_at, id
-                       ROWS UNBOUNDED PRECEDING
-                     ) AS session_id
-              FROM boundaries
-            ),
-            sessions AS (
-              SELECT session_id,
-                     MIN(occurred_at) AS started_at,
-                     MAX(occurred_at) AS ended_at,
-                     COUNT(*) AS events
-              FROM sessionized
-              GROUP BY session_id
-            )
-            SELECT COUNT(*),
-                   COALESCE(MAX(events), 0),
-                   COALESCE(MAX(ended_at - started_at), 0)
-            FROM sessions
-            """
-        ) { row in
-            (row.int(at: 0), row.int(at: 1), row.double(at: 2))
-        }.first
+        let sessionSummary =
+            try await database.query(
+                """
+                WITH ordered AS (
+                  SELECT id, occurred_at,
+                         LAG(occurred_at) OVER (ORDER BY occurred_at, id) AS previous_at
+                  FROM analytics
+                ),
+                boundaries AS (
+                  SELECT id, occurred_at,
+                         CASE
+                           WHEN previous_at IS NULL OR occurred_at - previous_at > 1800
+                           THEN 1 ELSE 0
+                         END AS starts_session
+                  FROM ordered
+                ),
+                sessionized AS (
+                  SELECT id, occurred_at,
+                         SUM(starts_session) OVER (
+                           ORDER BY occurred_at, id
+                           ROWS UNBOUNDED PRECEDING
+                         ) AS session_id
+                  FROM boundaries
+                ),
+                sessions AS (
+                  SELECT session_id,
+                         MIN(occurred_at) AS started_at,
+                         MAX(occurred_at) AS ended_at,
+                         COUNT(*) AS events
+                  FROM sessionized
+                  GROUP BY session_id
+                )
+                SELECT COUNT(*),
+                       COALESCE(MAX(events), 0),
+                       COALESCE(MAX(ended_at - started_at), 0)
+                FROM sessions
+                """
+            ) { row in
+                (row.int(at: 0), row.int(at: 1), row.double(at: 2))
+            }
+            .first
 
         if let sessionSummary, sessionSummary.0 > 0 {
             result.append(
@@ -335,38 +351,40 @@ final class AnalyticsStore: @unchecked Sendable {
             )
         }
 
-        let upNext = try database.query(
-            """
-            WITH filters AS (
-              SELECT id, occurred_at,
-                     json_extract(properties, '$.path') AS path,
-                     LEAD(json_extract(properties, '$.path'))
-                       OVER (ORDER BY occurred_at, id) AS next_path
-              FROM analytics
-              WHERE event = 'filter_finished'
-            ),
-            transitions AS (
-              SELECT path, next_path, COUNT(*) AS uses
-              FROM filters
-              WHERE next_path IS NOT NULL AND path <> next_path
-              GROUP BY path, next_path
-            ),
-            ranked AS (
-              SELECT path, next_path, uses,
-                     ROW_NUMBER() OVER (ORDER BY uses DESC, path, next_path) AS rank
-              FROM transitions
-            )
-            SELECT path, next_path, uses
-            FROM ranked
-            WHERE rank = 1
-            """
-        ) { row in
-            (
-                row.string(at: 0) ?? "—",
-                row.string(at: 1) ?? "—",
-                row.int(at: 2)
-            )
-        }.first
+        let upNext =
+            try await database.query(
+                """
+                WITH filters AS (
+                  SELECT id, occurred_at,
+                         json_extract(properties, '$.path') AS path,
+                         LEAD(json_extract(properties, '$.path'))
+                           OVER (ORDER BY occurred_at, id) AS next_path
+                  FROM analytics
+                  WHERE event = 'filter_finished'
+                ),
+                transitions AS (
+                  SELECT path, next_path, COUNT(*) AS uses
+                  FROM filters
+                  WHERE next_path IS NOT NULL AND path <> next_path
+                  GROUP BY path, next_path
+                ),
+                ranked AS (
+                  SELECT path, next_path, uses,
+                         ROW_NUMBER() OVER (ORDER BY uses DESC, path, next_path) AS rank
+                  FROM transitions
+                )
+                SELECT path, next_path, uses
+                FROM ranked
+                WHERE rank = 1
+                """
+            ) { row in
+                (
+                    row.string(at: 0) ?? "—",
+                    row.string(at: 1) ?? "—",
+                    row.int(at: 2)
+                )
+            }
+            .first
 
         if let upNext {
             result.append(
@@ -380,13 +398,15 @@ final class AnalyticsStore: @unchecked Sendable {
         }
 
         let dockerPasteboardCopies =
-            try database.query(
+            try await database
+            .query(
                 """
                 SELECT COUNT(*)
                 FROM analytics
                 WHERE event = 'docker_command_copied'
                 """
-            ) { row in row.int(at: 0) }.first ?? 0
+            ) { row in row.int(at: 0) }
+            .first ?? 0
         result.append(
             .init(
                 id: "dockerPasteboardCopies",

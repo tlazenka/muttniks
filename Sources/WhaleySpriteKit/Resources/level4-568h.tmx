@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="10" height="175" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" spacing="2" margin="2">
+  <image source="tileset2.png"/>
+ </tileset>
+ <tileset firstgid="3" name="meta_tileset" tilewidth="32" tileheight="32" spacing="2" margin="2">
+  <image source="meta_tileset.png"/>
+  <tile id="0">
+   <properties>
+    <property name="IsWall" value="True"/>
+    <property name="IsWall" value="True"/>
+    <property name="IsWall" value="True"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="IsGround" value="True"/>
+    <property name="IsGround" value="True"/>
+    <property name="IsGround" value="True"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Background" width="10" height="175">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2Y2wrEMAhE0/z/R5c+LAQZdczFTSBCKc2ejOamYZ9SykM+nl0ul6vOo+mx69vDWeNY6ffu0z6u/snv5S63G+flEisPzeS0+E7jZHsWx8a3gmPjW8ExdRDtwc8qybF6TIytIf/Mesyq+zvVwd+D7nJsjlrFte2S0/qxemgNMscbnWekLy1yLhkOsb1cZN5QnxFu1roiW30ue/TQ3Ixwn8n9qjGsnsVV0IbOj6XX5jPWb5RD+0Xzh/QsVs41Ow4tBm0cWi30bMY+Zf4/YOJjxsvMH7sekRzG6nlchl7WHaCAN8ONxifbPA5ZRl1AeSvD7+mcnLf2e4f4duesPtE80LZ7OpG8Eo1LYz07hYvcN0Y4lJML8K9xrF77G1MrrPdKLhKfpo/00Hn01uYFZlbRY1gbAAA=
+  </data>
+ </layer>
+ <layer name="Meta" width="10" height="175" opacity="0.54">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2Y2wrEIAxEhfr/37xPBQljMmniZcWAD3VPzWjj2O1TSnnIZsXlcrhqtGhe2Xc6h+47nauL8l7ucv/KWWfe9SsfJ/tncay+ERyrbwSHareSHDuel0PnELPOWdyO52D7Loc4zXtYj9qJ02pghr5Kchl5ZWTvN8R+5TzztMZbVXcoRnHsevd+Y7lKcJL5Ol/pQYhrcyGu52da3gxO0y7XpacN5bXmYbGS6WmYWafM9wNGn6deNM7zPCzO42Ge8bL1tRH5njPSY99+pA9x0byyz+JQRP1v1r48iZPr1l7voO8UTrvHu79740V9xaurx1qxmtPOrJF53/D8X8zmojVyEse0H5MRKhZYGwAA
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="10" height="175">
+  <object name="BubbleOrigin" x="13" y="5502" width="32" height="32">
+   <properties>
+    <property name="IsBubble" value="1"/>
+   </properties>
+  </object>
+  <object name="PlayerOrigin" x="33" y="5467" width="32" height="32"/>
+  <object name="CoinOrigin" x="96" y="5242" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="Goal" x="145" y="97" width="32" height="32"/>
+  <object name="BubbleOrigin" x="101" y="5450" width="32" height="32">
+   <properties>
+    <property name="IsBubble" value="1"/>
+   </properties>
+  </object>
+  <object name="BubbleOrigin" x="10" y="5374" width="32" height="32">
+   <properties>
+    <property name="IsBubble" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="34" y="5146" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="88" y="5063" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="188" y="4925" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="131" y="4847" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="79" y="4537" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="64" y="4396" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="144" y="4281" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="152" y="3958" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="225" y="3883" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="62" y="3266" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="128" y="3196" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="223" y="3550" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="62" y="2783" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="130" y="2331" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="64" y="2010" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="223" y="1471" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="94" y="1662" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="63" y="753" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="111" y="672" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="63" y="592" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="111" y="511" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="63" y="432" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="63" y="292" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="224" y="579" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="226" y="510" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="195" y="511" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="252" y="512" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="196" y="474" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="223" y="475" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="252" y="477" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="196" y="447" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="224" y="448" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="253" y="447" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="196" y="414" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="225" y="414" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="253" y="414" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+  <object name="CoinOrigin" x="111" y="372" width="32" height="32">
+   <properties>
+    <property name="IsCoin" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Flames" width="10" height="175">
+  <object name="Flame" x="35" y="5237" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="100" y="5113" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="75" y="5113" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="48" y="5113" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="129" y="4644" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="158" y="4644" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="129" y="4678" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="158" y="4678" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="83" y="4362" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="4384" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="4414" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="83" y="4441" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="131" y="4384" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="131" y="4414" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="160" y="4384" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="160" y="4414" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="187" y="4384" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="187" y="4414" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="209" y="4362" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="209" y="4441" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="196" y="4052" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="225" y="4052" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3077" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="3629" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="33" y="3473" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="33" y="3499" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="33" y="3143" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="61" y="3143" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="89" y="3143" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="227" y="3013" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="252" y="3013" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="227" y="3039" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="252" y="3039" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="195" y="2885" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3237" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3261" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3285" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="35" y="2885" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="62" y="2885" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="89" y="2885" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="2691" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="127" y="2691" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="152" y="2691" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="127" y="2570" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="152" y="2570" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="2496" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="127" y="2496" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="2570" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="152" y="2496" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3106" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="3653" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="163" y="3047" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="119" y="3971" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="119" y="3908" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="93" y="3908" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="93" y="3971" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2340" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2312" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2284" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2256" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2228" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2200" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2172" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2144" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2116" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2088" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="67" y="2060" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="132" y="2211" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="132" y="2184" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="132" y="2157" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="2340" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="2312" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="2284" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="228" y="2256" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="44" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="73" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="131" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="160" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="189" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="218" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="247" y="1287" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="44" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="73" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="102" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="131" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="160" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="189" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="0"/>
+   </properties>
+  </object>
+  <object name="Flame" x="247" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="218" y="1159" width="24" height="24">
+   <properties>
+    <property name="Phase" value="-1"/>
+   </properties>
+  </object>
+  <object name="Flame" x="34" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="61" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="88" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="115" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="142" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="169" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="196" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="223" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+  <object name="Flame" x="250" y="967" width="24" height="24">
+   <properties>
+    <property name="Phase" value="180"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

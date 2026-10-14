@@ -1,12 +1,9 @@
 FROM swift:6.4
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libsqlite3-dev pkg-config \
+    && apt-get install -y --no-install-recommends libsqlite3-dev sqlite3 pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-
+WORKDIR /workspace
 COPY . .
-
-CMD ["swift", "build"]
+RUN swift build

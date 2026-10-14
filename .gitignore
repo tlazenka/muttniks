@@ -187,3 +187,4 @@ kotlin-ide/
 .bsp
 __pycache__
 sol/broadcast
+Demos/MuttniksDemos.xcodeproj

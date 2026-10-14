@@ -1,4 +1,4 @@
-.PHONY: test-app test-likes test-contracts test-integration test-tacky
+.PHONY: test-app test-likes test-contracts test-integration test-tacky feed-server earthquakes-cli swift-tests xcode-project
 
 test-app:
 	docker compose --profile test run --rm app sbt test
@@ -14,6 +14,18 @@ test-integration:
 
 test-tacky:
 	docker compose run --rm likes-test
+	
+feed-server:
+	docker compose up --build postgres feed-server
+
+earthquakes-cli:
+	docker compose run --rm earthquakes-cli $(ARGS)
+
+swift-tests:
+	docker compose run --rm swift-tests
+
+xcode-project:
+	cd Demos && xcodegen generate
 
 .PHONY: test
 test:
@@ -22,6 +34,10 @@ test:
 .PHONY: format
 format:
 	swift format --in-place --recursive . 
+
+.PHONY: format-objc
+format-objc:
+	find . -type f \( -name '*.h' -o -name '*.m' \) -exec clang-format -i {} +
 	
 .PHONY: test-docker
 test-docker:

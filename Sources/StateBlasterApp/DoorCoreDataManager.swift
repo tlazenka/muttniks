@@ -100,14 +100,17 @@ public struct DoorCoreDataManager {
                 knock.timestamp = date
                 knock.sourceUserId = direction.sourceUserId
                 knock.destinationUserId = direction.destinationUserId
-                let sourceUser = try backgroundContext.fetch(
-                    Self.userFetchRequest(userId: knockType.direction.sourceUserId)
-                )
-                .first
+                let sourceUser =
+                    try backgroundContext.fetch(
+                        Self.userFetchRequest(userId: knockType.direction.sourceUserId)
+                    )
+                    .first
                 sourceUser?.addToSentKnocks(knock)
-                let destinationUser = try backgroundContext.fetch(
-                    Self.userFetchRequest(userId: knockType.direction.destinationUserId)
-                ).first
+                let destinationUser =
+                    try backgroundContext.fetch(
+                        Self.userFetchRequest(userId: knockType.direction.destinationUserId)
+                    )
+                    .first
                 destinationUser?.addToReceivedKnocks(knock)
                 knock.sourceUser = sourceUser
                 knock.destinationUser = destinationUser
@@ -118,14 +121,17 @@ public struct DoorCoreDataManager {
                 knock.timestamp = date
                 knock.sourceUserId = direction.sourceUserId
                 knock.destinationUserId = direction.destinationUserId
-                let sourceUser = try backgroundContext.fetch(
-                    Self.userFetchRequest(userId: knockType.direction.sourceUserId)
-                )
-                .first
+                let sourceUser =
+                    try backgroundContext.fetch(
+                        Self.userFetchRequest(userId: knockType.direction.sourceUserId)
+                    )
+                    .first
                 sourceUser?.addToSentKnocks(knock)
-                let destinationUser = try backgroundContext.fetch(
-                    Self.userFetchRequest(userId: knockType.direction.destinationUserId)
-                ).first
+                let destinationUser =
+                    try backgroundContext.fetch(
+                        Self.userFetchRequest(userId: knockType.direction.destinationUserId)
+                    )
+                    .first
                 destinationUser?.addToReceivedKnocks(knock)
                 knock.sourceUser = sourceUser
                 knock.destinationUser = destinationUser

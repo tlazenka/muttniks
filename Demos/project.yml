@@ -1,25 +1,92 @@
-name: Earthquakes
+name: MuttniksDemos
 options:
-  bundleIdPrefix: com.puzzola
+  bundleIdPrefix: com.muttniks
   deploymentTarget:
-    iOS: "27.0"
+    iOS: "18.0"
+    macOS: "15.0"
+  xcodeVersion: "27.0"
 packages:
-  Puzzola:
+  Muttniks:
     path: ../
-targets:
-  PuzzolaDemo:
+
+targetTemplates:
+  iOSDemo:
     type: application
-    supportedDestinations: [iOS]
-    sources: [Sources]
+    platform: iOS
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+  macDemo:
+    type: application
+    platform: macOS
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+
+targets:
+  Whaley:
+    templates: [iOSDemo]
+    sources:
+      - path: ./Whaley
+        excludes: [Resources, Cocos2dCompatibility]
     dependencies:
-      - package: Puzzola
-        product: Puzzola
-      - package: Puzzola
-        product: PuzzolaUIKit
-      - package: Puzzola
-        product: PuzzolaJSON
-    info:
-      path: Info.plist
-      properties:
-        CFBundleDisplayName: Earthquakes
-        UILaunchScreen: {}
+      - package: Muttniks
+        product: WhaleyObjectiveC
+      - package: Muttniks
+        product: WhaleySpriteKit
+      - package: Muttniks
+        product: WhaleyCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.muttniks.whaley
+        INFOPLIST_KEY_CFBundleDisplayName: Whaley
+        GCC_NO_COMMON_BLOCKS: "NO"
+        OTHER_LDFLAGS: "$(inherited) -lz"
+
+  Earthquakes:
+    templates: [iOSDemo]
+    sources:
+      - path: ./Sources/Earthquakes
+    dependencies:
+      - package: Muttniks
+        product: CBLinearHierarchy
+      - package: Muttniks
+        product: SQLiteJSONBlaster
+      - package: Muttniks
+        product: SemanticCore
+      - package: Muttniks
+        product: ScopedUserDefaults
+      - package: Muttniks
+        product: MuttniksStateMachines
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.muttniks.earthquakes
+        INFOPLIST_KEY_CFBundleDisplayName: Earthquakes
+  OnboardingSwiftUI:
+    templates: [iOSDemo]
+    sources:
+      - path: ./OnboardingSwiftUI
+    dependencies:
+      - package: Muttniks
+        product: OnboardingFeature
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.muttniks.onboardingswiftui
+        INFOPLIST_KEY_CFBundleDisplayName: OnboardingSwiftUI
+  OnboardingStick:
+    templates: [iOSDemo, macDemo]
+    sources:
+      - path: ./OnboardingStick
+    dependencies:
+      - package: Muttniks
+        product: StateBlaster
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.muttniks.onboardingstick
+        INFOPLIST_KEY_CFBundleDisplayName: OnboardingStick        
+
+schemes:
+  Whaley: {build: {targets: {Whaley: all}}, run: {config: Debug}}
+  Earthquakes: {build: {targets: {Earthquakes: all}}, run: {config: Debug}}

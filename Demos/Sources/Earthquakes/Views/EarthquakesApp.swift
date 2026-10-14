@@ -1,4 +1,4 @@
-import Puzzola
+import SQLiteJSONBlaster
 import SwiftUI
 
 @main
@@ -7,10 +7,10 @@ struct EarthquakesApp: App {
 
     init() {
         do {
-            let directory = URL.applicationSupportDirectory.appendingPathComponent("PuzzolaDemo", isDirectory: true)
+            let directory = URL.applicationSupportDirectory.appendingPathComponent("MuttniksDemo", isDirectory: true)
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             let database = try Database(path: directory.appendingPathComponent("SampleData.sqlite").path)
-            quakesProvider = try QuakesProvider(database: database)
+            quakesProvider = QuakesProvider(database: database)
         } catch {
             fatalError(error.localizedDescription)
         }

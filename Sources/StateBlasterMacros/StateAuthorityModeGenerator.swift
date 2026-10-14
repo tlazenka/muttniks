@@ -35,12 +35,14 @@ func generateStateAuthorityMachineWrapper(states: [StateDescription], access: St
         .joined(separator: "\n\n")
     let acquirers = states.filter { !$0.isTerminal }.map { generateStateAuthorityAcquirer(for: $0, access: access) }
         .joined(separator: "\n\n")
-    let transitions = states.flatMap { source in
-        source.transitions.compactMap { name -> String? in
-            guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
-            return generateStateAuthorityMachineTransition(from: source, to: destination, access: access)
+    let transitions =
+        states.flatMap { source in
+            source.transitions.compactMap { name -> String? in
+                guard let destination = states.first(where: { $0.caseName == name }) else { return nil }
+                return generateStateAuthorityMachineTransition(from: source, to: destination, access: access)
+            }
         }
-    }.joined(separator: "\n\n")
+        .joined(separator: "\n\n")
     return """
         \(access) struct Machine<Owner: AnyObject> {
             private let owner: Owner
@@ -97,9 +99,11 @@ func generateStateAuthorityMachineTransition(
         required.isEmpty
         ? "(consume state).\(destination.caseName)()"
         : "(consume state).\(destination.caseName)(\(argumentList(for: required)))"
-    let bindings = destination.fields.map {
-        "let screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst()) = next.\($0.name)"
-    }.joined(separator: "\n        ")
+    let bindings = destination.fields
+        .map {
+            "let screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst()) = next.\($0.name)"
+        }
+        .joined(separator: "\n        ")
     let args = destination.fields.map { "\($0.name): screen\($0.name.prefix(1).uppercased() + $0.name.dropFirst())" }
         .joined(separator: ", ")
     let suffix = args.isEmpty ? "" : ", \(args)"
